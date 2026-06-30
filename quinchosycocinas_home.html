@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quinchos & Cocinas — A medida en Santiago</title>
+  <meta name="description" content="Diseño, fabricación e instalación de quinchos y cocinas a medida en Las Condes, Vitacura, Lo Barnechea y sector oriente. Un solo equipo, sin intermediarios.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --carbon:   #1C1A17;
+      --carbon2:  #2A2620;
+      --carbon3:  #3D3A34;
+      --carbon4:  #4A4640;
+      --sand:     #C8B89A;
+      --cream:    #F2EDE5;
+      --copper:   #E07A3A;
+      --copper2:  #C96A2C;
+      --white:    #FFFFFF;
+      --gray:     #888780;
+      --gray2:    #5F5E5A;
+      --radius:   6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--carbon);
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--carbon);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 60px;
+      border-bottom: 1px solid rgba(200,184,154,0.1);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--cream);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-logo span { color: var(--sand); }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 12px;
+      color: var(--sand);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--copper);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 9px 20px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--copper2); }
+
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--sand);
+      border-radius: 2px;
+    }
+
+    /* ─── HERO ────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: flex-end;
+      padding: 60px 40px 56px;
+      overflow: hidden;
+      background: var(--carbon);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+    .hero-bg-l { background: var(--carbon2); position: relative; overflow: hidden; }
+    .hero-bg-r { display: grid; grid-template-rows: 1fr 1fr; gap: 2px; }
+    .hero-bg-rt { background: var(--carbon3); }
+    .hero-bg-rb { background: var(--carbon2); }
+
+    /* SVG texture pattern inside hero panels */
+    .hero-texture {
+      position: absolute;
+      inset: 0;
+      opacity: 0.06;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(28,26,23,0.45) 0%,
+        rgba(28,26,23,0.72) 55%,
+        rgba(28,26,23,0.92) 100%
+      );
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--sand);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--copper);
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 5vw, 52px);
+      line-height: 1.12;
+      color: var(--cream);
+      margin-bottom: 20px;
+    }
+    .hero-title em {
+      color: var(--sand);
+      font-style: italic;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: rgba(242,237,229,0.65);
+      line-height: 1.65;
+      margin-bottom: 32px;
+      max-width: 420px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--copper);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 13px 26px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--copper2); transform: translateY(-1px); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--sand);
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: var(--cream); }
+    .btn-ghost svg { transition: transform 0.2s; }
+    .btn-ghost:hover svg { transform: translateX(3px); }
+
+    .hero-stats {
+      position: absolute;
+      top: 32px;
+      right: 40px;
+      z-index: 2;
+      display: flex;
+      gap: 2px;
+    }
+
+    .hero-stat {
+      background: rgba(28,26,23,0.7);
+      border: 0.5px solid rgba(200,184,154,0.2);
+      padding: 14px 20px;
+      text-align: center;
+    }
+    .hero-stat:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .hero-stat:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
+
+    .hero-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--cream);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 10px;
+      color: var(--sand);
+      letter-spacing: 0.07em;
+      margin-top: 3px;
+    }
+
+    /* ─── TRUST BAR ───────────────────────────────────── */
+    .trust-bar {
+      background: var(--cream);
+      border-bottom: 0.5px solid rgba(28,26,23,0.1);
+      display: flex;
+      align-items: stretch;
+    }
+
+    .trust-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 22px;
+      border-right: 0.5px solid rgba(28,26,23,0.08);
+    }
+    .trust-item:last-child { border-right: none; }
+
+    .trust-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(224,122,58,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--copper);
+      font-size: 17px;
+    }
+
+    .trust-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--carbon3);
+      line-height: 1.4;
+    }
+
+    /* ─── SECTIONS COMMON ─────────────────────────────── */
+    .section { padding: 80px 40px; }
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 1px;
+      background: var(--copper);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 3.5vw, 36px);
+      color: var(--carbon);
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .section-sub {
+      font-size: 14px;
+      color: var(--gray2);
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    /* ─── GALLERY ─────────────────────────────────────── */
+    .gallery-section { padding: 80px 40px 0; background: var(--cream); }
+
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 28px;
+    }
+
+    .link-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--copper);
+      text-decoration: none;
+      transition: gap 0.2s;
+    }
+    .link-arrow:hover { gap: 9px; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 240px 240px;
+      gap: 3px;
+    }
+
+    .gal-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .gal-item.tall { grid-row: span 2; }
+
+    .gal-ph {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .gal-ph svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    .gal-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(28,26,23,0.82) 0%, transparent 55%);
+      display: flex;
+      align-items: flex-end;
+      padding: 18px;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .gal-item:hover .gal-overlay { opacity: 1; }
+
+    .gal-info-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--cream);
+    }
+    .gal-info-commune {
+      font-size: 11px;
+      color: var(--sand);
+      margin-top: 2px;
+    }
+    .gal-info-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 10px;
+      background: var(--copper);
+      color: var(--white);
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── ANTES/DESPUÉS ───────────────────────────────── */
+    .antes-section {
+      background: var(--carbon);
+      padding: 80px 40px;
+    }
+    .antes-section .section-label { color: rgba(200,184,154,0.7); }
+    .antes-section .section-label::before { background: rgba(200,184,154,0.4); }
+    .antes-section .section-title { color: var(--cream); }
+    .antes-section .section-sub { color: var(--gray); }
+
+    .slider-outer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-top: 36px;
+    }
+
+    .slider-wrap {
+      position: relative;
+      height: 340px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: ew-resize;
+      user-select: none;
+      border: 0.5px solid rgba(200,184,154,0.1);
+    }
+
+    .slider-before,
+    .slider-after {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .slider-before { background: var(--carbon2); }
+    .slider-after  {
+      background: var(--carbon3);
+      clip-path: inset(0 0 0 50%);
+      transition: clip-path 0s;
+    }
+
+    .slider-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--copper);
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .slider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      background: var(--copper);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      pointer-events: none;
+      border: 2px solid var(--white);
+    }
+
+    .slider-badge {
+      position: absolute;
+      top: 14px;
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 3px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .slider-badge.before {
+      left: 14px;
+      background: rgba(28,26,23,0.72);
+      color: var(--sand);
+    }
+    .slider-badge.after {
+      right: 14px;
+      background: rgba(224,122,58,0.88);
+      color: var(--white);
+    }
+
+    .slider-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px;
+      background: rgba(28,26,23,0.72);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+    .slider-footer-txt { font-size: 11px; color: var(--sand); }
+    .slider-pct { font-size: 11px; color: var(--copper); font-weight: 500; }
+
+    .slider-thumbnails {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .thumb-card {
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(200,184,154,0.15);
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .thumb-card:hover,
+    .thumb-card.active {
+      border-color: rgba(224,122,58,0.5);
+      background: rgba(224,122,58,0.06);
+    }
+
+    .thumb-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--cream);
+      margin-bottom: 4px;
+    }
+    .thumb-meta {
+      font-size: 11px;
+      color: var(--gray);
+      display: flex;
+      gap: 10px;
+    }
+    .thumb-meta span { display: flex; align-items: center; gap: 3px; }
+
+    /* ─── PROCESO ─────────────────────────────────────── */
+    .proceso-section { background: var(--cream); padding: 80px 40px; }
+
+    .pasos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      margin-top: 40px;
+    }
+
+    .paso-card {
+      background: var(--white);
+      border: 0.5px solid rgba(28,26,23,0.08);
+      padding: 28px 22px;
+      position: relative;
+    }
+    .paso-card:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .paso-card:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
+
+    .paso-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px;
+      color: rgba(200,184,154,0.4);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .paso-icon-wrap {
+      width: 40px;
+      height: 40px;
+      background: rgba(224,122,58,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--copper);
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .paso-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--carbon);
+      margin-bottom: 8px;
+    }
+
+    .paso-desc {
+      font-size: 13px;
+      color: var(--gray2);
+      line-height: 1.65;
+    }
+
+    .paso-arrow {
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      background: var(--cream);
+      border: 0.5px solid rgba(200,184,154,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sand);
+      z-index: 2;
+      font-size: 10px;
+    }
+    .paso-card:last-child .paso-arrow { display: none; }
+
+    /* ─── TESTIMONIOS ─────────────────────────────────── */
+    .test-section { background: var(--carbon); padding: 80px 40px; }
+    .test-section .section-label { color: rgba(200,184,154,0.6); }
+    .test-section .section-label::before { background: rgba(200,184,154,0.3); }
+    .test-section .section-title { color: var(--cream); }
+    .test-section .section-sub { color: var(--gray); }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 40px;
+    }
+
+    .test-card {
+      background: var(--carbon2);
+      border: 0.5px solid rgba(200,184,154,0.1);
+      border-radius: var(--radius);
+      padding: 26px;
+    }
+
+    .test-stars { color: var(--copper); font-size: 13px; letter-spacing: 3px; margin-bottom: 14px; }
+
+    .test-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: rgba(200,184,154,0.85);
+      line-height: 1.7;
+      font-style: italic;
+      margin-bottom: 18px;
+    }
+    .test-quote::before { content: '\201C'; color: var(--copper); }
+    .test-quote::after  { content: '\201D'; color: var(--copper); }
+
+    .test-author-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--sand);
+    }
+    .test-author-meta { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+    .test-tag {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 10px;
+      background: rgba(224,122,58,0.15);
+      color: var(--copper);
+      padding: 3px 9px;
+      border-radius: 3px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ─── CTA FINAL ───────────────────────────────────── */
+    .cta-section {
+      background: var(--copper);
+      padding: 72px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 3vw, 34px);
+      color: var(--white);
+      line-height: 1.18;
+      margin-bottom: 10px;
+    }
+
+    .cta-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.65;
+      max-width: 400px;
+    }
+
+    .cta-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      color: var(--copper);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: transform 0.15s;
+    }
+    .btn-white:hover { transform: translateY(-1px); }
+
+    .btn-outline-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.5);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: border-color 0.2s;
+    }
+    .btn-outline-white:hover { border-color: rgba(255,255,255,0.9); }
+
+    /* ─── FOOTER ──────────────────────────────────────── */
+    .footer {
+      background: #0F0E0C;
+      padding: 36px 40px;
+    }
+
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      padding-bottom: 28px;
+      border-bottom: 0.5px solid rgba(200,184,154,0.08);
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--sand); }
+
+    .footer-tagline {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 40px;
+    }
+
+    .footer-nav-col h4 {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--sand);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .footer-nav-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-nav-col a { font-size: 12px; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .footer-nav-col a:hover { color: var(--sand); }
+
+    .footer-contact { text-align: right; }
+    .footer-contact-label { font-size: 11px; color: var(--gray); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+    .footer-contact-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--sand);
+      text-decoration: none;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+    }
+    .footer-copy { font-size: 11px; color: var(--gray); }
+    .footer-comunas { font-size: 11px; color: rgba(136,135,128,0.6); }
+
+    /* ─── WHATSAPP FLOAT ──────────────────────────────── */
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.3);
+      transition: transform 0.2s;
+    }
+    .wa-float:hover { transform: translateY(-2px); }
+    .wa-float-dot {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ─── SVG ICONS (inline) ─────────────────────────── */
+    .icon { display: inline-block; width: 1em; height: 1em; vertical-align: middle; }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .hero { padding: 40px 20px 48px; min-height: 85vh; }
+      .hero-stats { display: none; }
+
+      .trust-bar { flex-wrap: wrap; }
+      .trust-item { flex: 0 0 50%; border-bottom: 0.5px solid rgba(28,26,23,0.08); }
+
+      .section { padding: 56px 20px; }
+      .gallery-section { padding: 56px 20px 0; }
+
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        height: auto;
+      }
+      .gal-item.tall { grid-row: span 1; height: 200px; }
+      .gal-item { height: 160px; }
+
+      .antes-section { padding: 56px 20px; }
+      .slider-outer { grid-template-columns: 1fr; }
+
+      .proceso-section { padding: 56px 20px; }
+      .pasos-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .paso-card { border-radius: var(--radius) !important; }
+      .paso-arrow { display: none; }
+
+      .test-section { padding: 56px 20px; }
+      .test-grid { grid-template-columns: 1fr; }
+
+      .cta-section {
+        padding: 56px 20px;
+        flex-direction: column;
+        gap: 28px;
+      }
+      .cta-btns { align-items: flex-start; }
+
+      .footer { padding: 40px 20px; }
+      .footer-top { flex-direction: column; gap: 28px; }
+      .footer-nav { gap: 24px; }
+      .footer-contact { text-align: left; }
+      .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
+
+      .wa-float { bottom: 20px; right: 20px; padding: 11px 16px; font-size: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      .trust-item { flex: 0 0 100%; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gal-item, .gal-item.tall { height: 220px; grid-row: span 1; }
+      .pasos-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="#" class="nav-logo">Quinchos<span>&amp;</span>Cocinas</a>
+    <ul class="nav-links">
+      <li><a href="#quinchos">Quinchos</a></li>
+      <li><a href="#cocinas">Cocinas</a></li>
+      <li><a href="#portafolio">Portafolio</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+    </ul>
+    <a href="https://wa.me/56912345678?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto" class="nav-cta" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      Cotizar
+    </a>
+    <button class="nav-hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" aria-label="Bienvenida">
+    <div class="hero-bg">
+      <div class="hero-bg-l">
+        <svg class="hero-texture" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <line x1="0" y1="100" x2="400" y2="100" stroke="#C8B89A" stroke-width="0.5"/>
+          <line x1="0" y1="250" x2="400" y2="250" stroke="#C8B89A" stroke-width="0.5"/>
+          <line x1="0" y1="400" x2="400" y2="400" stroke="#C8B89A" stroke-width="0.5"/>
+          <line x1="100" y1="0" x2="100" y2="600" stroke="#C8B89A" stroke-width="0.5"/>
+          <line x1="260" y1="0" x2="260" y2="600" stroke="#C8B89A" stroke-width="0.5"/>
+          <rect x="40" y="120" width="140" height="100" rx="4" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.6"/>
+          <rect x="40" y="270" width="200" height="100" rx="4" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.4"/>
+          <rect x="290" y="180" width="90" height="70" rx="3" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="hero-bg-r">
+        <div class="hero-bg-rt"></div>
+        <div class="hero-bg-rb"></div>
+      </div>
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-stats" aria-label="Estadísticas">
+      <div class="hero-stat">
+        <div class="hero-stat-num">+80</div>
+        <div class="hero-stat-label">proyectos</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">8</div>
+        <div class="hero-stat-label">años</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">5</div>
+        <div class="hero-stat-label">comunas</div>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Las Condes · Vitacura · Lo Barnechea · La Reina</p>
+      <h1 class="hero-title">
+        Tu quincho y <em>cocina</em><br>
+        hechos a medida.<br>
+        Un solo equipo.
+      </h1>
+      <p class="hero-sub">Diseño, fabricación e instalación sin intermediarios. Proyectos integrales en el sector oriente de Santiago.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/56912345678?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto" class="btn-primary" target="_blank" rel="noopener">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Cotiza por WhatsApp
+        </a>
+        <a href="#portafolio" class="btn-ghost">
+          Ver proyectos
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRUST BAR ── -->
+  <div class="trust-bar" role="list" aria-label="Por qué elegirnos">
+    <div class="trust-item" role="listitem">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <div class="trust-text">Un solo equipo, sin subcontratos</div>
+    </div>
+    <div class="trust-item" role="listitem">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </div>
+      <div class="trust-text">Diseño 3D antes de ejecutar</div>
+    </div>
+    <div class="trust-item" role="listitem">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div class="trust-text">Proyectos en el sector oriente</div>
+    </div>
+    <div class="trust-item" role="listitem">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="trust-text">Garantía en materiales e instalación</div>
+    </div>
+  </div>
+
+  <!-- ── GALERÍA ── -->
+  <section class="gallery-section" id="portafolio" aria-label="Portafolio de proyectos">
+    <div class="gallery-header">
+      <div>
+        <p class="section-label">Portafolio</p>
+        <h2 class="section-title">Proyectos recientes</h2>
+        <p class="section-sub">Quinchos y cocinas terminados en el sector oriente.</p>
+      </div>
+      <a href="#" class="link-arrow">
+        Ver todos
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="gallery-grid">
+      <!-- Foto 1 — tall left -->
+      <div class="gal-item tall">
+        <div class="gal-ph" style="background:#2A2620; height:100%;">
+          <svg viewBox="0 0 300 480" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="300" height="480" fill="#2A2620"/>
+            <path d="M40,180 L260,180 L260,360 Q260,390 230,390 L70,390 Q40,390 40,360 Z" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.2"/>
+            <rect x="60" y="200" width="80" height="140" rx="2" fill="#3D3A34" opacity="0.5"/>
+            <rect x="160" y="200" width="80" height="140" rx="2" fill="#3D3A34" opacity="0.5"/>
+            <line x1="40" y1="390" x2="260" y2="390" stroke="#C8B89A" stroke-width="0.5" opacity="0.15"/>
+            <line x1="80" y1="390" x2="80" y2="440" stroke="#C8B89A" stroke-width="0.5" opacity="0.2"/>
+            <line x1="220" y1="390" x2="220" y2="440" stroke="#C8B89A" stroke-width="0.5" opacity="0.2"/>
+            <rect x="40" y="440" width="220" height="16" rx="3" fill="#3D3A34" opacity="0.25"/>
+            <text x="150" y="460" text-anchor="middle" font-family="Playfair Display,serif" font-size="14" fill="#C8B89A" opacity="0.5" font-style="italic">quincho</text>
+          </svg>
+        </div>
+        <div class="gal-overlay">
+          <div>
+            <div class="gal-info-label">Quincho + terraza cubierta</div>
+            <div class="gal-info-commune">Lo Barnechea · 2024</div>
+            <div class="gal-info-tag">Quincho</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foto 2 -->
+      <div class="gal-item">
+        <div class="gal-ph" style="background:#3D3A34; height:100%;">
+          <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="300" height="240" fill="#3D3A34"/>
+            <rect x="20" y="30" width="260" height="140" rx="4" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.2"/>
+            <rect x="40" y="50" width="80" height="100" rx="2" fill="#4A4540" opacity="0.6"/>
+            <rect x="140" y="50" width="120" height="100" rx="2" fill="#4A4540" opacity="0.5"/>
+            <line x1="20" y1="188" x2="280" y2="188" stroke="#C8B89A" stroke-width="0.5" opacity="0.12"/>
+            <text x="150" y="220" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#C8B89A" opacity="0.45" font-style="italic">cocina</text>
+          </svg>
+        </div>
+        <div class="gal-overlay">
+          <div>
+            <div class="gal-info-label">Cocina blanca isla central</div>
+            <div class="gal-info-commune">Las Condes · 2024</div>
+            <div class="gal-info-tag">Cocina</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foto 3 -->
+      <div class="gal-item">
+        <div class="gal-ph" style="background:#4A4640; height:100%;">
+          <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="300" height="240" fill="#4A4640"/>
+            <path d="M20,80 Q150,50 280,80 L280,180 Q150,210 20,180 Z" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.18"/>
+            <path d="M20,130 Q150,100 280,130" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.12"/>
+            <rect x="80" y="90" width="140" height="80" rx="3" fill="#3D3A34" opacity="0.4"/>
+            <text x="150" y="220" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#C8B89A" opacity="0.45" font-style="italic">quincho</text>
+          </svg>
+        </div>
+        <div class="gal-overlay">
+          <div>
+            <div class="gal-info-label">Quincho techado con parrilla</div>
+            <div class="gal-info-commune">Vitacura · 2023</div>
+            <div class="gal-info-tag">Quincho</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foto 4 -->
+      <div class="gal-item">
+        <div class="gal-ph" style="background:#2C2A27; height:100%;">
+          <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="300" height="240" fill="#2C2A27"/>
+            <rect x="20" y="40" width="260" height="120" rx="4" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.18"/>
+            <rect x="20" y="172" width="70" height="50" rx="2" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.15"/>
+            <rect x="105" y="172" width="70" height="50" rx="2" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.15"/>
+            <rect x="210" y="172" width="70" height="50" rx="2" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.15"/>
+            <text x="150" y="230" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#C8B89A" opacity="0.45" font-style="italic">cocina</text>
+          </svg>
+        </div>
+        <div class="gal-overlay">
+          <div>
+            <div class="gal-info-label">Cocina madera + cuarzo</div>
+            <div class="gal-info-commune">La Reina · 2024</div>
+            <div class="gal-info-tag">Cocina</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foto 5 -->
+      <div class="gal-item">
+        <div class="gal-ph" style="background:#403D38; height:100%;">
+          <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="300" height="240" fill="#403D38"/>
+            <line x1="20" y1="60" x2="280" y2="60" stroke="#C8B89A" stroke-width="0.5" opacity="0.15"/>
+            <line x1="20" y1="110" x2="280" y2="110" stroke="#C8B89A" stroke-width="0.5" opacity="0.12"/>
+            <line x1="20" y1="160" x2="280" y2="160" stroke="#C8B89A" stroke-width="0.5" opacity="0.1"/>
+            <rect x="70" y="70" width="160" height="80" rx="4" fill="#3D3A34" opacity="0.3"/>
+            <text x="150" y="220" text-anchor="middle" font-family="Playfair Display,serif" font-size="13" fill="#C8B89A" opacity="0.45" font-style="italic">quincho</text>
+          </svg>
+        </div>
+        <div class="gal-overlay">
+          <div>
+            <div class="gal-info-label">Quincho moderno techado</div>
+            <div class="gal-info-commune">Peñalolén · 2023</div>
+            <div class="gal-info-tag">Quincho</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ANTES / DESPUÉS ── -->
+  <section class="antes-section" aria-label="Transformaciones antes y después">
+    <p class="section-label">Transformaciones reales</p>
+    <h2 class="section-title">Antes y después</h2>
+    <p class="section-sub">Arrastra el divisor para comparar. Proyectos reales con clientes reales.</p>
+
+    <div class="slider-outer">
+      <div>
+        <div class="slider-wrap" id="sliderWrap" role="img" aria-label="Comparación antes y después de un quincho en Vitacura">
+          <div class="slider-before">
+            <svg width="100%" height="340" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="600" height="340" fill="#2A2620"/>
+              <rect x="40" y="60" width="300" height="200" rx="4" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.18"/>
+              <rect x="80" y="100" width="100" height="80" rx="2" fill="#3D3A34" opacity="0.4"/>
+              <rect x="200" y="110" width="80" height="60" rx="2" fill="#3D3A34" opacity="0.3"/>
+              <line x1="40" y1="280" x2="560" y2="280" stroke="#C8B89A" stroke-width="0.5" opacity="0.1"/>
+              <text x="300" y="316" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#888780">Patio sin uso — 2022</text>
+            </svg>
+          </div>
+          <div class="slider-after" id="sliderAfter">
+            <svg width="100%" height="340" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="600" height="340" fill="#3D3834"/>
+              <path d="M30,220 Q150,190 300,200 Q450,210 570,180 L570,340 L30,340 Z" fill="#4A3D2A" opacity="0.35"/>
+              <rect x="100" y="60" width="400" height="120" rx="8" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.28"/>
+              <rect x="100" y="60" width="400" height="28" rx="4" fill="#3D3A34" opacity="0.45"/>
+              <line x1="300" y1="88" x2="300" y2="180" stroke="#C8B89A" stroke-width="0.5" opacity="0.2"/>
+              <rect x="130" y="205" width="120" height="60" rx="4" fill="#E07A3A" opacity="0.22"/>
+              <rect x="280" y="205" width="130" height="60" rx="4" fill="#C8B89A" opacity="0.12"/>
+              <text x="300" y="316" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#C8B89A">Quincho equipado — 2023</text>
+            </svg>
+          </div>
+          <div class="slider-divider" id="sliderDiv"></div>
+          <div class="slider-handle" id="sliderHandle" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12H3M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>
+          </div>
+          <div class="slider-badge before">Antes</div>
+          <div class="slider-badge after">Después</div>
+          <div class="slider-footer">
+            <span class="slider-footer-txt">Vitacura · Quincho + parrilla + cubierta</span>
+            <span class="slider-pct" id="sliderPct">50%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-thumbnails" role="list" aria-label="Otros proyectos antes y después">
+        <div class="thumb-card active" role="listitem" tabindex="0">
+          <div class="thumb-title">Quincho Vitacura</div>
+          <div class="thumb-meta">
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Vitacura
+            </span>
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              6 semanas
+            </span>
+          </div>
+        </div>
+        <div class="thumb-card" role="listitem" tabindex="0">
+          <div class="thumb-title">Cocina Las Condes</div>
+          <div class="thumb-meta">
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Las Condes
+            </span>
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              4 semanas
+            </span>
+          </div>
+        </div>
+        <div class="thumb-card" role="listitem" tabindex="0">
+          <div class="thumb-title">Quincho + cocina Lo Barnechea</div>
+          <div class="thumb-meta">
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Lo Barnechea
+            </span>
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              10 semanas
+            </span>
+          </div>
+        </div>
+        <div class="thumb-card" role="listitem" tabindex="0">
+          <div class="thumb-title">Remodelación cocina La Reina</div>
+          <div class="thumb-meta">
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              La Reina
+            </span>
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              3 semanas
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROCESO ── -->
+  <section class="proceso-section" id="proceso" aria-label="Cómo trabajamos">
+    <div style="text-align:center; margin-bottom:4px;">
+      <p class="section-label" style="justify-content:center;">Cómo trabajamos</p>
+      <h2 class="section-title">De la idea al proyecto terminado</h2>
+      <p class="section-sub" style="margin: 8px auto 0; text-align:center;">Un proceso claro en 4 etapas. Sin sorpresas en el camino.</p>
+    </div>
+
+    <div class="pasos-grid">
+      <div class="paso-card">
+        <div class="paso-num">01</div>
+        <div class="paso-icon-wrap" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="paso-title">Visita y diagnóstico</div>
+        <p class="paso-desc">Vamos a tu casa, medimos el espacio y entendemos qué necesitas. Sin costo.</p>
+        <div class="paso-arrow" aria-hidden="true">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+
+      <div class="paso-card">
+        <div class="paso-num">02</div>
+        <div class="paso-icon-wrap" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        </div>
+        <div class="paso-title">Diseño en 3D</div>
+        <p class="paso-desc">Te mostramos cómo quedaría antes de empezar. Hacemos ajustes hasta que quedes conforme.</p>
+        <div class="paso-arrow" aria-hidden="true">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+
+      <div class="paso-card">
+        <div class="paso-num">03</div>
+        <div class="paso-icon-wrap" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="paso-title">Materiales y presupuesto</div>
+        <p class="paso-desc">Cotización detallada con materiales, plazos y condiciones de pago. Sin letra chica.</p>
+        <div class="paso-arrow" aria-hidden="true">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </div>
+      </div>
+
+      <div class="paso-card">
+        <div class="paso-num">04</div>
+        <div class="paso-icon-wrap" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="paso-title">Ejecución y entrega</div>
+        <p class="paso-desc">Nuestro equipo ejecuta el proyecto. Te informamos de cada avance hasta la entrega final.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIOS ── -->
+  <section class="test-section" id="testimonios" aria-label="Testimonios de clientes">
+    <p class="section-label">Lo que dicen los clientes</p>
+    <h2 class="section-title">Proyectos que hablan por sí solos</h2>
+    <p class="section-sub">Experiencias reales de propietarios en el sector oriente de Santiago.</p>
+
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-stars" aria-label="5 estrellas">★★★★★</div>
+        <p class="test-quote">Le encargamos el quincho completo: cubierta, parrilla empotrada y mesón de hormigón. El proceso fue muy ordenado, nos mostraron el diseño en 3D antes de empezar y no hubo ninguna sorpresa en el camino. El equipo llegó todos los días, cumplieron el plazo prometido y quedamos más que satisfechos.</p>
+        <div class="test-author-name">Rodrigo Mena</div>
+        <div class="test-author-meta">Las Condes · 2024</div>
+        <div class="test-tag">Quincho + parrilla</div>
+      </div>
+
+      <div class="test-card">
+        <div class="test-stars" aria-label="5 estrellas">★★★★★</div>
+        <p class="test-quote">Reformamos la cocina entera. Nos ayudaron a elegir los materiales según nuestro presupuesto y el resultado superó lo que esperábamos. Muy buena comunicación durante todo el proyecto, respondían rápido por WhatsApp cada vez que teníamos una consulta.</p>
+        <div class="test-author-name">Francisca Ortiz</div>
+        <div class="test-author-meta">Vitacura · 2024</div>
+        <div class="test-tag">Cocina a medida</div>
+      </div>
+
+      <div class="test-card">
+        <div class="test-stars" aria-label="5 estrellas">★★★★★</div>
+        <p class="test-quote">Hicimos el quincho y la cocina en la misma obra. Fue una gran ventaja tener un solo equipo coordinando todo. La terminación es impecable y las visitas de nuestros amigos ahora son en otro nivel.</p>
+        <div class="test-author-name">Patricio Vargas</div>
+        <div class="test-author-meta">Lo Barnechea · 2023</div>
+        <div class="test-tag">Proyecto integral</div>
+      </div>
+
+      <div class="test-card">
+        <div class="test-stars" aria-label="5 estrellas">★★★★★</div>
+        <p class="test-quote">Lo que más me gustó fue el diseño 3D previo. Pude ver exactamente cómo quedaría la cocina antes de aprobar. Cambiamos algunos detalles y el resultado final fue exactamente lo que queríamos.</p>
+        <div class="test-author-name">Carolina Fuentes</div>
+        <div class="test-author-meta">La Reina · 2024</div>
+        <div class="test-tag">Cocina a medida</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="cta-section" aria-label="Contacto y cotización">
+    <div>
+      <h2 class="cta-title">¿Listo para transformar<br>tu espacio?</h2>
+      <p class="cta-sub">Cuéntanos tu idea por WhatsApp. Coordinamos una visita sin costo y te mostramos qué se puede hacer en tu espacio.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="https://wa.me/56912345678?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto" class="btn-white" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Escríbenos ahora
+      </a>
+      <a href="#portafolio" class="btn-outline-white">
+        Ver portafolio completo
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer" id="nosotros">
+    <div class="footer-top">
+      <div>
+        <a href="#" class="footer-logo">Quinchos<span>&amp;</span>Cocinas</a>
+        <p class="footer-tagline">Diseño, fabricación e instalación a medida.<br>Sector oriente de Santiago.</p>
+      </div>
+
+      <div class="footer-nav">
+        <div class="footer-nav-col">
+          <h4>Servicios</h4>
+          <ul>
+            <li><a href="#quinchos">Quinchos</a></li>
+            <li><a href="#cocinas">Cocinas</a></li>
+            <li><a href="#portafolio">Portafolio</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h4>Comunas</h4>
+          <ul>
+            <li><a href="#">Las Condes</a></li>
+            <li><a href="#">Vitacura</a></li>
+            <li><a href="#">Lo Barnechea</a></li>
+            <li><a href="#">La Reina</a></li>
+            <li><a href="#">Peñalolén</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-contact">
+        <p class="footer-contact-label">Contáctanos</p>
+        <a href="https://wa.me/56912345678" class="footer-contact-wa" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#25D366" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          +56 9 XXXX XXXX
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2024 Quinchos &amp; Cocinas. Todos los derechos reservados.</p>
+      <p class="footer-comunas">Las Condes · Vitacura · Lo Barnechea · La Reina · Peñalolén</p>
+    </div>
+  </footer>
+
+  <!-- ── WA FLOAT ── -->
+  <a href="https://wa.me/56912345678?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto" class="wa-float" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    <span>Cotizar por WhatsApp</span>
+    <span class="wa-float-dot"></span>
+  </a>
+
+  <script>
+    /* ── Slider antes/después ── */
+    const wrap   = document.getElementById('sliderWrap');
+    const after  = document.getElementById('sliderAfter');
+    const divEl  = document.getElementById('sliderDiv');
+    const handle = document.getElementById('sliderHandle');
+    const pctEl  = document.getElementById('sliderPct');
+    let dragging = false;
+
+    function setPct(clientX) {
+      const rect = wrap.getBoundingClientRect();
+      let p = (clientX - rect.left) / rect.width;
+      p = Math.max(0.04, Math.min(0.96, p));
+      const v = Math.round(p * 100);
+      after.style.clipPath  = 'inset(0 0 0 ' + v + '%)';
+      divEl.style.left      = v + '%';
+      handle.style.left     = v + '%';
+      pctEl.textContent     = v + '%';
+    }
+
+    wrap.addEventListener('mousedown',  e => { dragging = true; setPct(e.clientX); e.preventDefault(); });
+    document.addEventListener('mousemove', e => { if (dragging) setPct(e.clientX); });
+    document.addEventListener('mouseup',   ()  => { dragging = false; });
+    wrap.addEventListener('touchstart', e => { dragging = true; setPct(e.touches[0].clientX); }, { passive: true });
+    document.addEventListener('touchmove', e => { if (dragging) setPct(e.touches[0].clientX); }, { passive: true });
+    document.addEventListener('touchend',  ()  => { dragging = false; });
+
+    /* ── Thumbnail cards (proyectos) ── */
+    document.querySelectorAll('.thumb-card').forEach(card => {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.thumb-card').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+      });
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+
+    /* ── Nav sticky scroll ── */
+    const nav = document.querySelector('.nav');
+    window.addEventListener('scroll', () => {
+      nav.style.borderBottomColor = window.scrollY > 20
+        ? 'rgba(200,184,154,0.18)'
+        : 'rgba(200,184,154,0.1)';
+    }, { passive: true });
+
+    /* ── WA float: hide when CTA section is visible ── */
+    const waFloat  = document.querySelector('.wa-float');
+    const ctaFinal = document.querySelector('.cta-section');
+    if (ctaFinal && waFloat) {
+      const obs = new IntersectionObserver(entries => {
+        waFloat.style.opacity    = entries[0].isIntersecting ? '0' : '1';
+        waFloat.style.pointerEvents = entries[0].isIntersecting ? 'none' : 'auto';
+      }, { threshold: 0.3 });
+      obs.observe(ctaFinal);
+    }
+  </script>
+</body>
+</html>
