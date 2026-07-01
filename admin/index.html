@@ -95,7 +95,8 @@
     .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; }
     .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gray); line-height: 1; padding: 4px; }
     .modal-body { padding: 24px; flex: 1; }
-    .modal-footer { padding: 16px 24px; border-top: 1px solid rgba(28,26,23,0.08); display: flex; gap: 10px; }
+    .modal-footer { padding: 14px 24px; border-top: 1px solid rgba(28,26,23,0.08); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .modal-footer .btn-full { grid-column: span 2; }
 
     /* DETAIL SECTIONS */
     .detail-section { margin-bottom: 20px; }
@@ -110,7 +111,7 @@
     .form-input-m:focus { border-color: var(--copper); }
     select.form-input-m { cursor: pointer; }
     textarea.form-input-m { resize: vertical; min-height: 80px; }
-    .btn-sm { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+    .btn-sm { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; width: 100%; }
     .btn-primary-sm { background: var(--copper); color: #fff; }
     .btn-primary-sm:hover { background: var(--copper2); }
     .btn-ghost-sm { background: #fff; border: 1px solid rgba(28,26,23,0.15); color: var(--carbon2); }
@@ -415,24 +416,30 @@
     );
 
     document.getElementById('modalFooter').innerHTML = `
-      <button class="btn-sm btn-primary-sm" onclick="saveCotizacion()">Guardar cambios</button>
-      <a class="btn-sm btn-ghost-sm" href="${cotLink}" target="_blank" rel="noopener" title="Ver / Descargar PDF">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-        Ver / PDF
-      </a>
-      <button class="btn-sm btn-ghost-sm" onclick="copyLink('${cotLink}')" title="Copiar link para compartir">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        Copiar link
+      <button class="btn-sm btn-primary-sm btn-full" onclick="saveCotizacion()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Guardar cambios
       </button>
       <button class="btn-sm btn-email-sm" id="btnEmail" onclick="enviarEmail()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Enviar email
       </button>
       <a class="btn-sm btn-wa-sm" href="https://wa.me/${c.telefono.replace(/\D/g,'')}?text=${waLink}" target="_blank" rel="noopener">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         WhatsApp
       </a>
-      <button class="btn-sm btn-ghost-sm" onclick="closeModal()">Cerrar</button>`;
+      <a class="btn-sm btn-ghost-sm" href="${cotLink}" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Ver / PDF
+      </a>
+      <button class="btn-sm btn-ghost-sm" onclick="copyLink('${cotLink}')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar link
+      </button>
+      <button class="btn-sm btn-ghost-sm" onclick="closeModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Cerrar
+      </button>`;
 
     document.getElementById('modalOverlay').classList.add('show');
   }
