@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotizador — Quinchos & Cocinas</title>
+  <meta name="description" content="Cotiza tu quincho o cocina a medida. Precio estimado al instante.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --carbon: #1C1A17; --carbon2: #2A2620; --carbon3: #3D3A34;
+      --sand: #C8B89A; --cream: #F2EDE5; --copper: #E07A3A; --copper2: #C96A2C;
+      --white: #FFFFFF; --gray: #888780; --gray2: #5F5E5A; --radius: 6px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--carbon); }
+
+    /* NAV */
+    .nav { position: sticky; top: 0; z-index: 100; background: var(--carbon); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 60px; border-bottom: 1px solid rgba(200,184,154,0.1); }
+    .nav-logo { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--cream); text-decoration: none; }
+    .nav-logo span { color: var(--sand); }
+    .nav-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--sand); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--cream); }
+
+    /* LAYOUT */
+    .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; display: grid; grid-template-columns: 1fr 340px; gap: 40px; align-items: start; }
+    @media (max-width: 900px) { .page { grid-template-columns: 1fr; } }
+
+    /* STEPS */
+    .steps-bar { display: flex; align-items: center; margin-bottom: 36px; }
+    .step-item { display: flex; align-items: center; gap: 8px; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--carbon3); color: var(--gray); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; transition: all 0.2s; }
+    .step-label { font-size: 12px; color: var(--gray2); white-space: nowrap; }
+    .step-item.active .step-num { background: var(--copper); color: #fff; }
+    .step-item.active .step-label { color: var(--carbon); font-weight: 500; }
+    .step-item.done .step-num { background: #22c55e; color: #fff; }
+    .step-item.done .step-label { color: var(--gray2); }
+    .step-line { flex: 1; height: 1px; background: rgba(28,26,23,0.12); margin: 0 12px; }
+
+    /* CARDS / SECTIONS */
+    .card { background: #fff; border: 0.5px solid rgba(28,26,23,0.1); border-radius: 10px; padding: 28px; margin-bottom: 16px; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--carbon); margin-bottom: 6px; }
+    .card-sub { font-size: 13px; color: var(--gray2); margin-bottom: 24px; }
+
+    /* TIPO SELECTOR */
+    .tipo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .tipo-card { border: 1.5px solid rgba(28,26,23,0.12); border-radius: 8px; padding: 20px 14px; cursor: pointer; text-align: center; transition: all 0.2s; user-select: none; }
+    .tipo-card:hover { border-color: var(--copper); }
+    .tipo-card.selected { border-color: var(--copper); background: rgba(224,122,58,0.06); }
+    .tipo-card input { display: none; }
+    .tipo-icon { font-size: 28px; margin-bottom: 8px; }
+    .tipo-name { font-size: 14px; font-weight: 500; color: var(--carbon); margin-bottom: 3px; }
+    .tipo-desc { font-size: 11px; color: var(--gray2); }
+
+    /* FORM GROUPS */
+    .form-group { margin-bottom: 24px; }
+    .form-label { font-size: 13px; font-weight: 500; color: var(--carbon); margin-bottom: 8px; display: block; }
+    .form-input { width: 100%; border: 1px solid rgba(28,26,23,0.15); border-radius: var(--radius); padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--carbon); background: #fff; transition: border-color 0.2s; outline: none; }
+    .form-input:focus { border-color: var(--copper); }
+    textarea.form-input { resize: vertical; min-height: 90px; }
+
+    /* SLIDER */
+    .slider-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+    .slider-val { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--copper); min-width: 70px; text-align: right; }
+    input[type="range"] { flex: 1; height: 4px; border-radius: 2px; accent-color: var(--copper); cursor: pointer; }
+
+    /* RADIO BUTTONS */
+    .radio-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .radio-card { border: 1px solid rgba(28,26,23,0.12); border-radius: var(--radius); padding: 10px 16px; cursor: pointer; font-size: 13px; color: var(--carbon2); transition: all 0.15s; user-select: none; display: flex; align-items: center; gap: 8px; }
+    .radio-card:hover { border-color: var(--copper); }
+    .radio-card input { accent-color: var(--copper); }
+    .radio-card.selected { border-color: var(--copper); background: rgba(224,122,58,0.06); color: var(--copper2); font-weight: 500; }
+
+    /* OPTION CHECKBOXES */
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 500px) { .options-grid { grid-template-columns: 1fr; } }
+    .option-card { border: 1px solid rgba(28,26,23,0.1); border-radius: var(--radius); padding: 12px 14px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; transition: all 0.15s; user-select: none; }
+    .option-card:hover { border-color: var(--copper); }
+    .option-card.checked { border-color: var(--copper); background: rgba(224,122,58,0.05); }
+    .option-card input[type="checkbox"] { margin-top: 2px; accent-color: var(--copper); flex-shrink: 0; }
+    .option-name { font-size: 13px; font-weight: 500; color: var(--carbon); }
+    .option-price { font-size: 11px; color: var(--copper); margin-top: 2px; }
+
+    /* SECTION DIVIDER */
+    .section-divider { border: none; border-top: 1px solid rgba(28,26,23,0.08); margin: 24px 0; }
+    .section-cat { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--copper); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .section-cat::before { content: ''; display: block; width: 16px; height: 1px; background: var(--copper); }
+
+    /* BUTTONS */
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--copper); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 13px 28px; border-radius: var(--radius); border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; text-decoration: none; }
+    .btn-primary:hover { background: var(--copper2); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-ghost { display: inline-flex; align-items: center; gap: 6px; background: none; border: 1px solid rgba(28,26,23,0.15); color: var(--carbon2); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 12px 24px; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; }
+    .btn-ghost:hover { border-color: var(--carbon); }
+    .btn-row { display: flex; gap: 12px; margin-top: 8px; }
+
+    /* SUMMARY CARD */
+    .summary-wrap { position: sticky; top: 80px; }
+    .summary-card { background: var(--carbon); border-radius: 10px; padding: 24px; }
+    .summary-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(200,184,154,0.6); margin-bottom: 20px; }
+    .summary-items { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; min-height: 60px; }
+    .summary-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .summary-item-label { font-size: 12px; color: var(--sand); }
+    .summary-item-price { font-size: 12px; color: var(--cream); font-weight: 500; white-space: nowrap; }
+    .summary-divider { border: none; border-top: 0.5px solid rgba(200,184,154,0.15); margin: 16px 0; }
+    .summary-total-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+    .summary-total { font-family: 'Playfair Display', serif; font-size: 30px; color: var(--cream); }
+    .summary-empty { font-size: 13px; color: var(--gray); font-style: italic; }
+    .summary-note { font-size: 11px; color: rgba(200,184,154,0.5); margin-top: 16px; line-height: 1.5; }
+    @media (max-width: 900px) { .summary-wrap { position: static; order: -1; } }
+
+    /* STEP PANEL */
+    .step-panel { display: none; }
+    .step-panel.active { display: block; }
+
+    /* SUCCESS */
+    .success-wrap { text-align: center; padding: 48px 24px; }
+    .success-icon { font-size: 52px; margin-bottom: 16px; }
+    .success-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--carbon); margin-bottom: 10px; }
+    .success-sub { font-size: 14px; color: var(--gray2); line-height: 1.7; margin-bottom: 28px; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .btn-wa { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 13px 28px; border-radius: 50px; text-decoration: none; transition: transform 0.15s; }
+    .btn-wa:hover { transform: translateY(-2px); }
+
+    /* LOADING */
+    .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(28,26,23,0.5); z-index: 200; align-items: center; justify-content: center; }
+    .loading-overlay.show { display: flex; }
+    .spinner { width: 40px; height: 40px; border: 3px solid rgba(200,184,154,0.3); border-top-color: var(--copper); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-msg { background: #fef2f2; border: 1px solid #fca5a5; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: #dc2626; margin-bottom: 16px; display: none; }
+    .error-msg.show { display: block; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">Quinchos<span>&</span>Cocinas</a>
+  <a href="/" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Volver al inicio
+  </a>
+</nav>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<div class="page">
+  <!-- FORM COLUMN -->
+  <div>
+    <!-- STEPS BAR -->
+    <div class="steps-bar">
+      <div class="step-item active" id="si0">
+        <div class="step-num">1</div>
+        <div class="step-label">Tipo</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" id="si1">
+        <div class="step-num">2</div>
+        <div class="step-label">Configuración</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item" id="si2">
+        <div class="step-num">3</div>
+        <div class="step-label">Tus datos</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: TIPO -->
+    <div class="step-panel active" id="step1">
+      <div class="card">
+        <h1 class="card-title">¿Qué quieres cotizar?</h1>
+        <p class="card-sub">Selecciona el tipo de proyecto para comenzar.</p>
+        <div class="tipo-grid">
+          <label class="tipo-card" onclick="selectTipo('quincho', this)">
+            <div class="tipo-icon">🏠</div>
+            <div class="tipo-name">Quincho</div>
+            <div class="tipo-desc">Espacio exterior cubierto</div>
+          </label>
+          <label class="tipo-card" onclick="selectTipo('cocina', this)">
+            <div class="tipo-icon">🍳</div>
+            <div class="tipo-name">Cocina</div>
+            <div class="tipo-desc">Muebles y mesones a medida</div>
+          </label>
+          <label class="tipo-card" onclick="selectTipo('ambos', this)">
+            <div class="tipo-icon">✨</div>
+            <div class="tipo-name">Quincho + Cocina</div>
+            <div class="tipo-desc">Proyecto integral</div>
+          </label>
+        </div>
+        <div style="margin-top:24px;">
+          <button class="btn-primary" onclick="goStep(2)" id="btnStep1" disabled>
+            Continuar
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: CONFIGURACIÓN -->
+    <div class="step-panel" id="step2">
+      <!-- QUINCHO CONFIG -->
+      <div class="card" id="quinchoConfig" style="display:none;">
+        <h2 class="card-title">Configuración del Quincho</h2>
+        <p class="card-sub">Ajusta las dimensiones y elige las opciones que necesitas.</p>
+
+        <div class="form-group">
+          <label class="form-label">Superficie del quincho</label>
+          <div class="slider-row">
+            <input type="range" id="quinchoM2" min="9" max="120" value="20" step="1" oninput="updateQuinchoM2(this.value)">
+            <div class="slider-val"><span id="quinchoM2Val">20</span> m²</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tipo de techo</label>
+          <div class="radio-group">
+            <label class="radio-card selected" onclick="selectTecho(this, 'madera')">
+              <input type="radio" name="quincho_techo" value="madera" checked> Madera nativa
+            </label>
+            <label class="radio-card" onclick="selectTecho(this, 'zinc')">
+              <input type="radio" name="quincho_techo" value="zinc"> Zinc
+            </label>
+            <label class="radio-card" onclick="selectTecho(this, 'ninguno')">
+              <input type="radio" name="quincho_techo" value="ninguno"> Sin techo
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Opciones adicionales</label>
+          <div class="options-grid" id="quinchoOpciones"></div>
+        </div>
+      </div>
+
+      <!-- COCINA CONFIG -->
+      <div class="card" id="cocinaConfig" style="display:none;">
+        <h2 class="card-title">Configuración de la Cocina</h2>
+        <p class="card-sub">Ajusta los metros lineales de mueble y elige los acabados.</p>
+
+        <div class="form-group">
+          <label class="form-label">Metros lineales de mueble</label>
+          <div class="slider-row">
+            <input type="range" id="cocinaML" min="1.5" max="20" value="4" step="0.5" oninput="updateCocinaML(this.value)">
+            <div class="slider-val"><span id="cocinaMLVal">4</span> ml</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Material del mesón</label>
+          <div class="radio-group">
+            <label class="radio-card selected" onclick="selectMeson(this, 'cuarzo')">
+              <input type="radio" name="cocina_meson" value="cuarzo" checked> Cuarzo
+            </label>
+            <label class="radio-card" onclick="selectMeson(this, 'granito')">
+              <input type="radio" name="cocina_meson" value="granito"> Granito
+            </label>
+            <label class="radio-card" onclick="selectMeson(this, 'acero')">
+              <input type="radio" name="cocina_meson" value="acero"> Acero inox
+            </label>
+            <label class="radio-card" onclick="selectMeson(this, 'ninguno')">
+              <input type="radio" name="cocina_meson" value="ninguno"> Sin mesón
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Opciones adicionales</label>
+          <div class="options-grid" id="cocinaOpciones"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="goStep(1)">← Atrás</button>
+        <button class="btn-primary" onclick="goStep(3)">
+          Continuar →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: CONTACTO -->
+    <div class="step-panel" id="step3">
+      <div class="card">
+        <h2 class="card-title">Tus datos de contacto</h2>
+        <p class="card-sub">Te enviamos la cotización formal sin costo ni compromiso.</p>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Nombre completo *</label>
+            <input class="form-input" id="nombre" type="text" placeholder="Tu nombre">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Teléfono *</label>
+            <input class="form-input" id="telefono" type="tel" placeholder="+56 9 XXXX XXXX">
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input class="form-input" id="email" type="email" placeholder="tu@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Comuna</label>
+            <input class="form-input" id="comuna" type="text" placeholder="Ej: Las Condes">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dirección del proyecto</label>
+          <input class="form-input" id="direccion" type="text" placeholder="Calle, número (opcional)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Comentarios adicionales</label>
+          <textarea class="form-input" id="mensaje" placeholder="Cuéntanos más sobre tu proyecto, estilo que buscas, plazos..."></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-ghost" onclick="goStep(2)">← Atrás</button>
+        <button class="btn-primary" onclick="submitCotizacion()" id="btnSubmit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Solicitar cotización
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="step-panel" id="stepSuccess">
+      <div class="card success-wrap">
+        <div class="success-icon">🎉</div>
+        <h2 class="success-title">¡Cotización enviada!</h2>
+        <p class="success-sub">Recibimos tu solicitud y nos pondremos en contacto contigo en menos de 24 horas para coordinar una visita sin costo.</p>
+        <a href="https://wa.me/56994975216?text=Hola%2C%20acabo%20de%20enviar%20una%20cotizaci%C3%B3n%20en%20la%20web" class="btn-wa" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          También puedes escribirnos por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY COLUMN -->
+  <div class="summary-wrap">
+    <div class="summary-card">
+      <div class="summary-title">Estimación de tu proyecto</div>
+      <ul class="summary-items" id="summaryItems">
+        <li class="summary-empty">Configura tu proyecto para ver el precio estimado.</li>
+      </ul>
+      <hr class="summary-divider">
+      <div class="summary-total-label">Total estimado</div>
+      <div class="summary-total" id="summaryTotal">$ —</div>
+      <p class="summary-note">* Precio referencial. Sujeto a visita técnica gratuita. Sin compromiso.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPA_URL = 'https://rkwudbnpqnmoszfwcwls.supabase.co';
+  const SUPA_KEY = 'sb_publishable_tQeZg-Jb71FzYXwvBjm2kw_23MDzNKb';
+  const { createClient } = window.supabase;
+  const db = createClient(SUPA_URL, SUPA_KEY);
+
+  const PRECIOS_FALLBACK = [
+    { item_key: 'quincho_base_m2',      label: 'Quincho',                precio: 450000, unidad: 'por m²'   },
+    { item_key: 'quincho_techo_madera', label: 'Techo madera',           precio: 180000, unidad: 'por m²'   },
+    { item_key: 'quincho_techo_zinc',   label: 'Techo zinc',             precio: 95000,  unidad: 'por m²'   },
+    { item_key: 'quincho_parrilla',     label: 'Parrilla empotrada',     precio: 350000, unidad: 'por unidad'},
+    { item_key: 'quincho_iluminacion',  label: 'Iluminación decorativa', precio: 120000, unidad: 'por kit'  },
+    { item_key: 'quincho_meson_hormigon', label: 'Mesón hormigón',       precio: 280000, unidad: 'por m²'   },
+    { item_key: 'quincho_fogon',        label: 'Fogón a leña',           precio: 220000, unidad: 'por unidad'},
+    { item_key: 'quincho_tv',           label: 'Soporte TV + instalación', precio: 85000, unidad: 'por unidad'},
+    { item_key: 'cocina_base_ml',       label: 'Cocina',                 precio: 380000, unidad: 'por ml'   },
+    { item_key: 'cocina_isla',          label: 'Isla central',           precio: 650000, unidad: 'por unidad'},
+    { item_key: 'cocina_meson_cuarzo',  label: 'Mesón cuarzo',          precio: 95000,  unidad: 'por ml'   },
+    { item_key: 'cocina_meson_granito', label: 'Mesón granito',          precio: 75000,  unidad: 'por ml'   },
+    { item_key: 'cocina_meson_acero',   label: 'Mesón acero inox',       precio: 85000,  unidad: 'por ml'   },
+    { item_key: 'cocina_cajones',       label: 'Cajones con blandaje',   precio: 145000, unidad: 'por kit'  },
+    { item_key: 'cocina_campana',       label: 'Campana extractora',     precio: 180000, unidad: 'por unidad'},
+    { item_key: 'cocina_horno',         label: 'Horno empotrado',        precio: 120000, unidad: 'por unidad'},
+  ];
+
+  let precios = PRECIOS_FALLBACK;
+  let config = { tipo: null, quincho_m2: 20, quincho_techo: 'madera', quincho_opciones: [], cocina_ml: 4, cocina_meson: 'cuarzo', cocina_opciones: [] };
+  let currentStep = 1;
+
+  const QUINCHO_OPS = ['quincho_parrilla','quincho_iluminacion','quincho_meson_hormigon','quincho_fogon','quincho_tv'];
+  const COCINA_OPS  = ['cocina_isla','cocina_cajones','cocina_campana','cocina_horno'];
+
+  async function init() {
+    try {
+      const { data } = await db.from('precios').select('*').eq('activo', true);
+      if (data && data.length > 0) precios = data;
+    } catch(_) {}
+    buildOpcionesGrids();
+  }
+
+  function buildOpcionesGrids() {
+    const qGrid = document.getElementById('quinchoOpciones');
+    const cGrid = document.getElementById('cocinaOpciones');
+    qGrid.innerHTML = QUINCHO_OPS.map(key => {
+      const p = precios.find(x => x.item_key === key);
+      return p ? opcionCard(key, p.label, p.precio, 'quincho') : '';
+    }).join('');
+    cGrid.innerHTML = COCINA_OPS.map(key => {
+      const p = precios.find(x => x.item_key === key);
+      return p ? opcionCard(key, p.label, p.precio, 'cocina') : '';
+    }).join('');
+  }
+
+  function opcionCard(key, label, precio, cat) {
+    return `<label class="option-card" onclick="toggleOpcion('${key}','${cat}',this)">
+      <input type="checkbox" value="${key}">
+      <div>
+        <div class="option-name">${label}</div>
+        <div class="option-price">${formatCLP(precio)}</div>
+      </div>
+    </label>`;
+  }
+
+  function selectTipo(tipo, el) {
+    config.tipo = tipo;
+    document.querySelectorAll('.tipo-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('btnStep1').disabled = false;
+    calcular();
+  }
+
+  function selectTecho(el, val) {
+    config.quincho_techo = val;
+    document.querySelectorAll('[name="quincho_techo"]').closest ? null : null;
+    document.querySelectorAll('.radio-card').forEach(c => {
+      if (c.querySelector('[name="quincho_techo"]')) c.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    calcular();
+  }
+
+  function selectMeson(el, val) {
+    config.cocina_meson = val;
+    document.querySelectorAll('.radio-card').forEach(c => {
+      if (c.querySelector('[name="cocina_meson"]')) c.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    calcular();
+  }
+
+  function toggleOpcion(key, cat, el) {
+    el.classList.toggle('checked');
+    const arr = cat === 'quincho' ? config.quincho_opciones : config.cocina_opciones;
+    const idx = arr.indexOf(key);
+    if (idx > -1) arr.splice(idx, 1); else arr.push(key);
+    calcular();
+  }
+
+  function updateQuinchoM2(val) {
+    config.quincho_m2 = parseFloat(val);
+    document.getElementById('quinchoM2Val').textContent = val;
+    calcular();
+  }
+
+  function updateCocinaML(val) {
+    config.cocina_ml = parseFloat(val);
+    document.getElementById('cocinaMLVal').textContent = val;
+    calcular();
+  }
+
+  function getPrice(key) { return precios.find(p => p.item_key === key)?.precio ?? 0; }
+
+  function calcular() {
+    if (!config.tipo) return;
+    const items = [];
+    let total = 0;
+
+    if (['quincho','ambos'].includes(config.tipo)) {
+      const base = getPrice('quincho_base_m2') * config.quincho_m2;
+      items.push({ label: `Quincho ${config.quincho_m2} m²`, precio: base, cat: 'quincho' });
+      total += base;
+      if (config.quincho_techo && config.quincho_techo !== 'ninguno') {
+        const tp = getPrice(`quincho_techo_${config.quincho_techo}`) * config.quincho_m2;
+        const tl = config.quincho_techo === 'madera' ? 'Techo madera' : 'Techo zinc';
+        items.push({ label: tl, precio: tp, cat: 'quincho' });
+        total += tp;
+      }
+      config.quincho_opciones.forEach(key => {
+        const p = precios.find(x => x.item_key === key);
+        if (p) { items.push({ label: p.label, precio: p.precio, cat: 'quincho' }); total += p.precio; }
+      });
+    }
+
+    if (['cocina','ambos'].includes(config.tipo)) {
+      const base = getPrice('cocina_base_ml') * config.cocina_ml;
+      items.push({ label: `Cocina ${config.cocina_ml} ml`, precio: base, cat: 'cocina' });
+      total += base;
+      if (config.cocina_meson && config.cocina_meson !== 'ninguno') {
+        const mp = getPrice(`cocina_meson_${config.cocina_meson}`) * config.cocina_ml;
+        const ml = { cuarzo: 'Mesón cuarzo', granito: 'Mesón granito', acero: 'Mesón acero inox' }[config.cocina_meson];
+        items.push({ label: ml, precio: mp, cat: 'cocina' });
+        total += mp;
+      }
+      config.cocina_opciones.forEach(key => {
+        const p = precios.find(x => x.item_key === key);
+        if (p) { items.push({ label: p.label, precio: p.precio, cat: 'cocina' }); total += p.precio; }
+      });
+    }
+
+    const ul = document.getElementById('summaryItems');
+    ul.innerHTML = items.map(i =>
+      `<li class="summary-item"><span class="summary-item-label">${i.label}</span><span class="summary-item-price">${formatCLP(i.precio)}</span></li>`
+    ).join('') || '<li class="summary-empty">Agrega opciones para ver el desglose.</li>';
+    document.getElementById('summaryTotal').textContent = total > 0 ? formatCLP(total) : '$ —';
+    return total;
+  }
+
+  function goStep(n) {
+    if (n === 1) { setStep(1); return; }
+    if (n === 2) {
+      if (!config.tipo) return;
+      document.getElementById('quinchoConfig').style.display = ['quincho','ambos'].includes(config.tipo) ? 'block' : 'none';
+      document.getElementById('cocinaConfig').style.display  = ['cocina','ambos'].includes(config.tipo)  ? 'block' : 'none';
+      setStep(2);
+      return;
+    }
+    if (n === 3) { setStep(3); return; }
+  }
+
+  function setStep(n) {
+    currentStep = n;
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`step${n}`).classList.add('active');
+    [0,1,2].forEach(i => {
+      const el = document.getElementById(`si${i}`);
+      el.classList.remove('active','done');
+      if (i + 1 < n) el.classList.add('done');
+      else if (i + 1 === n) el.classList.add('active');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function submitCotizacion() {
+    const nombre   = document.getElementById('nombre').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const errEl    = document.getElementById('errorMsg');
+    errEl.classList.remove('show');
+
+    if (!nombre || !telefono) {
+      errEl.textContent = 'Por favor ingresa tu nombre y teléfono.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    const total = calcular() || 0;
+    const loading = document.getElementById('loadingOverlay');
+    loading.classList.add('show');
+    document.getElementById('btnSubmit').disabled = true;
+
+    const payload = {
+      tipo: config.tipo,
+      nombre,
+      telefono,
+      email:    document.getElementById('email').value.trim() || null,
+      direccion: document.getElementById('direccion').value.trim() || null,
+      comuna:   document.getElementById('comuna').value.trim() || null,
+      mensaje:  document.getElementById('mensaje').value.trim() || null,
+      quincho_m2: ['quincho','ambos'].includes(config.tipo) ? config.quincho_m2 : null,
+      quincho_techo: config.quincho_techo || null,
+      quincho_opciones: config.quincho_opciones,
+      cocina_ml: ['cocina','ambos'].includes(config.tipo) ? config.cocina_ml : null,
+      cocina_meson: config.cocina_meson || null,
+      cocina_opciones: config.cocina_opciones,
+      precio_estimado: total,
+    };
+
+    try {
+      const { error } = await db.from('cotizaciones').insert([payload]);
+      if (error) throw error;
+      loading.classList.remove('show');
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('stepSuccess').classList.add('active');
+      document.querySelector('.steps-bar').style.display = 'none';
+    } catch (e) {
+      loading.classList.remove('show');
+      document.getElementById('btnSubmit').disabled = false;
+      errEl.textContent = 'Hubo un error al enviar. Inténtalo de nuevo o escríbenos por WhatsApp.';
+      errEl.classList.add('show');
+    }
+  }
+
+  function formatCLP(n) {
+    return '$ ' + Math.round(n).toLocaleString('es-CL');
+  }
+
+  init();
+</script>
+</body>
+</html>

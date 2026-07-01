@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Quinchos & Cocinas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --carbon: #1C1A17; --carbon2: #2A2620; --carbon3: #3D3A34;
+      --sand: #C8B89A; --cream: #F2EDE5; --copper: #E07A3A; --copper2: #C96A2C;
+      --white: #FFFFFF; --gray: #888780; --gray2: #5F5E5A; --radius: 6px;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: #f8f7f5; color: var(--carbon); height: 100vh; display: flex; flex-direction: column; }
+
+    /* LOGIN */
+    .login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: var(--carbon); }
+    .login-card { background: var(--carbon2); border: 0.5px solid rgba(200,184,154,0.15); border-radius: 12px; padding: 40px; width: 100%; max-width: 380px; }
+    .login-logo { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--cream); text-align: center; margin-bottom: 6px; }
+    .login-logo span { color: var(--sand); }
+    .login-sub { font-size: 12px; color: var(--gray); text-align: center; margin-bottom: 28px; }
+    .login-label { font-size: 12px; color: var(--sand); display: block; margin-bottom: 6px; }
+    .login-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(200,184,154,0.2); border-radius: var(--radius); padding: 11px 14px; color: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; margin-bottom: 14px; }
+    .login-input:focus { border-color: var(--copper); }
+    .login-btn { width: 100%; background: var(--copper); color: #fff; border: none; border-radius: var(--radius); padding: 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .login-btn:hover { background: var(--copper2); }
+    .login-err { font-size: 12px; color: #f87171; text-align: center; margin-top: 10px; min-height: 18px; }
+
+    /* APP LAYOUT */
+    .app { display: none; flex: 1; overflow: hidden; height: 100vh; }
+    .app.show { display: flex; }
+    .sidebar { width: 220px; background: var(--carbon); display: flex; flex-direction: column; flex-shrink: 0; }
+    .sidebar-logo { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--cream); padding: 24px 20px 20px; border-bottom: 0.5px solid rgba(200,184,154,0.1); }
+    .sidebar-logo span { color: var(--sand); }
+    .sidebar-nav { flex: 1; padding: 16px 0; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 11px 20px; font-size: 13px; color: var(--gray); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+    .nav-item:hover { color: var(--sand); background: rgba(200,184,154,0.05); }
+    .nav-item.active { color: var(--cream); border-left-color: var(--copper); background: rgba(224,122,58,0.08); }
+    .sidebar-footer { padding: 16px 20px; border-top: 0.5px solid rgba(200,184,154,0.1); }
+    .logout-btn { width: 100%; background: none; border: 1px solid rgba(200,184,154,0.2); color: var(--gray); font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 8px; border-radius: var(--radius); cursor: pointer; transition: all 0.15s; }
+    .logout-btn:hover { border-color: var(--sand); color: var(--sand); }
+
+    /* MAIN */
+    .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+    .topbar { padding: 20px 28px; border-bottom: 1px solid rgba(28,26,23,0.08); display: flex; align-items: center; justify-content: space-between; background: #fff; }
+    .topbar-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--carbon); }
+    .content { padding: 24px 28px; flex: 1; }
+
+    /* TABS */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* STATS */
+    .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: #fff; border: 0.5px solid rgba(28,26,23,0.1); border-radius: var(--radius); padding: 16px; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--carbon); }
+    .stat-label { font-size: 11px; color: var(--gray2); margin-top: 2px; }
+
+    /* FILTROS */
+    .filtros { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filtro-btn { background: #fff; border: 1px solid rgba(28,26,23,0.12); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--gray2); cursor: pointer; transition: all 0.15s; }
+    .filtro-btn:hover { border-color: var(--copper); color: var(--copper); }
+    .filtro-btn.active { background: var(--copper); border-color: var(--copper); color: #fff; }
+
+    /* TABLE */
+    .table-wrap { background: #fff; border: 0.5px solid rgba(28,26,23,0.1); border-radius: 8px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: #fafaf9; }
+    th { padding: 11px 16px; font-size: 11px; font-weight: 500; color: var(--gray2); text-align: left; letter-spacing: 0.05em; text-transform: uppercase; border-bottom: 1px solid rgba(28,26,23,0.08); }
+    td { padding: 13px 16px; font-size: 13px; color: var(--carbon); border-bottom: 0.5px solid rgba(28,26,23,0.06); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr.clickable { cursor: pointer; }
+    tr.clickable:hover td { background: #faf9f7; }
+    .empty-row td { text-align: center; color: var(--gray); padding: 40px; font-style: italic; }
+
+    /* BADGES */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; }
+    .badge-nueva     { background: #dbeafe; color: #1d4ed8; }
+    .badge-revision  { background: #fef3c7; color: #b45309; }
+    .badge-enviada   { background: #d1fae5; color: #065f46; }
+    .badge-aceptada  { background: #dcfce7; color: #15803d; }
+    .badge-rechazada { background: #fee2e2; color: #dc2626; }
+    .badge-tipo-quincho { background: rgba(224,122,58,0.1); color: var(--copper2); }
+    .badge-tipo-cocina  { background: rgba(28,26,23,0.07); color: var(--gray2); }
+    .badge-tipo-ambos   { background: rgba(200,184,154,0.2); color: var(--carbon3); }
+
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,26,23,0.6); z-index: 300; }
+    .modal-overlay.show { display: flex; align-items: flex-start; justify-content: flex-end; }
+    .modal-drawer { background: #fff; width: 480px; height: 100vh; overflow-y: auto; box-shadow: -4px 0 24px rgba(0,0,0,0.12); display: flex; flex-direction: column; }
+    .modal-header { padding: 20px 24px; border-bottom: 1px solid rgba(28,26,23,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; }
+    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--gray); line-height: 1; padding: 4px; }
+    .modal-body { padding: 24px; flex: 1; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid rgba(28,26,23,0.08); display: flex; gap: 10px; }
+
+    /* DETAIL SECTIONS */
+    .detail-section { margin-bottom: 20px; }
+    .detail-section h4 { font-size: 11px; color: var(--copper); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .detail-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 0.5px solid rgba(28,26,23,0.06); font-size: 13px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key { color: var(--gray2); }
+    .detail-val { color: var(--carbon); font-weight: 500; text-align: right; max-width: 60%; word-break: break-word; }
+    .form-group-m { margin-bottom: 14px; }
+    .form-label-m { font-size: 12px; color: var(--gray2); display: block; margin-bottom: 5px; }
+    .form-input-m { width: 100%; border: 1px solid rgba(28,26,23,0.15); border-radius: var(--radius); padding: 10px 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--carbon); outline: none; }
+    .form-input-m:focus { border-color: var(--copper); }
+    select.form-input-m { cursor: pointer; }
+    textarea.form-input-m { resize: vertical; min-height: 80px; }
+    .btn-sm { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+    .btn-primary-sm { background: var(--copper); color: #fff; }
+    .btn-primary-sm:hover { background: var(--copper2); }
+    .btn-ghost-sm { background: #fff; border: 1px solid rgba(28,26,23,0.15); color: var(--carbon2); }
+    .btn-ghost-sm:hover { border-color: var(--carbon); }
+    .btn-wa-sm { background: #25D366; color: #fff; }
+    .btn-wa-sm:hover { background: #20b858; }
+
+    /* PRECIOS TAB */
+    .precios-section { margin-bottom: 28px; }
+    .precios-section h3 { font-family: 'Playfair Display', serif; font-size: 17px; margin-bottom: 12px; color: var(--carbon); }
+    .precio-row { display: grid; grid-template-columns: 1fr auto auto 60px; gap: 12px; align-items: center; background: #fff; border: 0.5px solid rgba(28,26,23,0.1); border-radius: var(--radius); padding: 13px 16px; margin-bottom: 8px; }
+    .precio-label { font-size: 13px; color: var(--carbon); }
+    .precio-unidad { font-size: 11px; color: var(--gray); }
+    .precio-input { border: 1px solid rgba(28,26,23,0.15); border-radius: 4px; padding: 6px 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; width: 120px; text-align: right; outline: none; }
+    .precio-input:focus { border-color: var(--copper); }
+    .btn-save-precio { background: var(--copper); color: #fff; border: none; border-radius: 4px; padding: 7px 12px; font-size: 12px; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .btn-save-precio:hover { background: var(--copper2); }
+    .btn-save-precio.saved { background: #22c55e; }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--carbon); color: var(--cream); padding: 12px 20px; border-radius: var(--radius); font-size: 13px; z-index: 999; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">Quinchos<span>&</span>Cocinas</div>
+    <div class="login-sub">Dashboard de administración</div>
+    <label class="login-label">Email</label>
+    <input class="login-input" type="email" id="loginEmail" placeholder="tu@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+    <label class="login-label">Contraseña</label>
+    <input class="login-input" type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Ingresar</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="appPage">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">Quinchos<span>&</span>Cocinas</div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showTab('cotizaciones', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Cotizaciones
+      </div>
+      <div class="nav-item" onclick="showTab('precios', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Precios
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <!-- COTIZACIONES TAB -->
+    <div class="tab-panel active" id="tabCotizaciones">
+      <div class="topbar">
+        <div class="topbar-title">Cotizaciones</div>
+        <button class="btn-sm btn-ghost-sm" onclick="loadCotizaciones()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          Actualizar
+        </button>
+      </div>
+      <div class="content">
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total</div></div>
+          <div class="stat-card"><div class="stat-num" id="statNueva">—</div><div class="stat-label">Nuevas</div></div>
+          <div class="stat-card"><div class="stat-num" id="statRevision">—</div><div class="stat-label">En revisión</div></div>
+          <div class="stat-card"><div class="stat-num" id="statEnviada">—</div><div class="stat-label">Enviadas</div></div>
+          <div class="stat-card"><div class="stat-num" id="statAceptada">—</div><div class="stat-label">Aceptadas</div></div>
+        </div>
+        <div class="filtros">
+          <button class="filtro-btn active" onclick="filtrar(null, this)">Todas</button>
+          <button class="filtro-btn" onclick="filtrar('nueva', this)">Nuevas</button>
+          <button class="filtro-btn" onclick="filtrar('revision', this)">En revisión</button>
+          <button class="filtro-btn" onclick="filtrar('enviada', this)">Enviadas</button>
+          <button class="filtro-btn" onclick="filtrar('aceptada', this)">Aceptadas</button>
+          <button class="filtro-btn" onclick="filtrar('rechazada', this)">Rechazadas</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Precio est.</th>
+                <th>Precio final</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="cotizacionesTbody">
+              <tr><td colspan="7" class="empty-row">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRECIOS TAB -->
+    <div class="tab-panel" id="tabPrecios">
+      <div class="topbar">
+        <div class="topbar-title">Gestión de precios</div>
+      </div>
+      <div class="content">
+        <div class="precios-section">
+          <h3>🏠 Quinchos</h3>
+          <div id="preciosQuincho"></div>
+        </div>
+        <div class="precios-section">
+          <h3>🍳 Cocinas</h3>
+          <div id="preciosCocina"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL DETALLE COTIZACIÓN -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-drawer">
+    <div class="modal-header">
+      <h3 id="modalTitle">Cotización</h3>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPA_URL = 'https://rkwudbnpqnmoszfwcwls.supabase.co';
+  const SUPA_KEY = 'sb_publishable_tQeZg-Jb71FzYXwvBjm2kw_23MDzNKb';
+  const { createClient } = window.supabase;
+  const db = createClient(SUPA_URL, SUPA_KEY);
+
+  let allCotizaciones = [];
+  let currentFilter = null;
+  let currentCotizacion = null;
+
+  // ── AUTH ─────────────────────────────────────────────────────
+  async function init() {
+    const { data: { session } } = await db.auth.getSession();
+    if (session) showApp();
+    db.auth.onAuthStateChange((_, session) => { if (session) showApp(); else showLogin(); });
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPass').value;
+    const errEl = document.getElementById('loginErr');
+    const btn   = document.getElementById('loginBtn');
+    errEl.textContent = '';
+    btn.innerHTML = '<span class="spinner"></span>';
+    btn.disabled = true;
+    const { error } = await db.auth.signInWithPassword({ email, password: pass });
+    if (error) {
+      errEl.textContent = 'Email o contraseña incorrectos.';
+      btn.innerHTML = 'Ingresar';
+      btn.disabled = false;
+    }
+  }
+
+  async function doLogout() {
+    await db.auth.signOut();
+    showLogin();
+  }
+
+  function showApp()  { document.getElementById('loginPage').style.display = 'none'; document.getElementById('appPage').classList.add('show'); loadCotizaciones(); loadPrecios(); }
+  function showLogin(){ document.getElementById('loginPage').style.display = 'flex'; document.getElementById('appPage').classList.remove('show'); }
+
+  // ── TABS ─────────────────────────────────────────────────────
+  function showTab(name, el) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(`tab${name.charAt(0).toUpperCase()+name.slice(1)}`).classList.add('active');
+    el.classList.add('active');
+  }
+
+  // ── COTIZACIONES ─────────────────────────────────────────────
+  async function loadCotizaciones() {
+    const { data } = await db.from('cotizaciones').select('*').order('creada_en', { ascending: false });
+    allCotizaciones = data || [];
+    updateStats();
+    renderTabla(currentFilter);
+  }
+
+  function updateStats() {
+    const c = allCotizaciones;
+    document.getElementById('statTotal').textContent    = c.length;
+    document.getElementById('statNueva').textContent    = c.filter(x=>x.estado==='nueva').length;
+    document.getElementById('statRevision').textContent = c.filter(x=>x.estado==='revision').length;
+    document.getElementById('statEnviada').textContent  = c.filter(x=>x.estado==='enviada').length;
+    document.getElementById('statAceptada').textContent = c.filter(x=>x.estado==='aceptada').length;
+  }
+
+  function filtrar(estado, el) {
+    currentFilter = estado;
+    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderTabla(estado);
+  }
+
+  function renderTabla(filtro) {
+    const rows = filtro ? allCotizaciones.filter(c => c.estado === filtro) : allCotizaciones;
+    const tbody = document.getElementById('cotizacionesTbody');
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-row">No hay cotizaciones' + (filtro ? ' con este estado' : '') + '.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(c => `
+      <tr class="clickable" onclick="openCotizacion(${c.id})">
+        <td style="font-weight:500">#${c.id}</td>
+        <td>${fmtFecha(c.creada_en)}</td>
+        <td>
+          <div style="font-weight:500">${c.nombre}</div>
+          <div style="font-size:11px;color:#888">${c.telefono}</div>
+        </td>
+        <td><span class="badge badge-tipo-${c.tipo}">${labelTipo(c.tipo)}</span></td>
+        <td>${c.precio_estimado ? formatCLP(c.precio_estimado) : '—'}</td>
+        <td>${c.precio_final    ? formatCLP(c.precio_final)    : '—'}</td>
+        <td><span class="badge badge-${c.estado}">${labelEstado(c.estado)}</span></td>
+      </tr>`).join('');
+  }
+
+  function openCotizacion(id) {
+    currentCotizacion = allCotizaciones.find(c => c.id === id);
+    if (!currentCotizacion) return;
+    const c = currentCotizacion;
+    document.getElementById('modalTitle').textContent = `Cotización #${c.id} — ${c.nombre}`;
+
+    const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : (c.quincho_opciones || []);
+    const cOps = Array.isArray(c.cocina_opciones)  ? c.cocina_opciones  : (c.cocina_opciones  || []);
+
+    document.getElementById('modalBody').innerHTML = `
+      <div class="detail-section">
+        <h4>Cliente</h4>
+        ${detailRow('Nombre', c.nombre)}
+        ${detailRow('Teléfono', `<a href="tel:${c.telefono}">${c.telefono}</a>`)}
+        ${detailRow('Email', c.email || '—')}
+        ${detailRow('Dirección', c.direccion || '—')}
+        ${detailRow('Comuna', c.comuna || '—')}
+        ${c.mensaje ? detailRow('Mensaje', c.mensaje) : ''}
+      </div>
+
+      <div class="detail-section">
+        <h4>Proyecto</h4>
+        ${detailRow('Tipo', labelTipo(c.tipo))}
+        ${c.quincho_m2 ? detailRow('Quincho', `${c.quincho_m2} m² · techo ${c.quincho_techo || '—'}`) : ''}
+        ${qOps.length  ? detailRow('Opciones quincho', qOps.join(', ').replace(/quincho_/g,'')) : ''}
+        ${c.cocina_ml  ? detailRow('Cocina', `${c.cocina_ml} ml · mesón ${c.cocina_meson || '—'}`) : ''}
+        ${cOps.length  ? detailRow('Opciones cocina',  cOps.join(', ').replace(/cocina_/g,''))  : ''}
+        ${detailRow('Precio estimado', c.precio_estimado ? formatCLP(c.precio_estimado) : '—')}
+        ${detailRow('Fecha solicitud', fmtFechaLarga(c.creada_en))}
+      </div>
+
+      <div class="detail-section">
+        <h4>Gestión</h4>
+        <div class="form-group-m">
+          <label class="form-label-m">Estado</label>
+          <select class="form-input-m" id="editEstado">
+            ${['nueva','revision','enviada','aceptada','rechazada'].map(e =>
+              `<option value="${e}" ${c.estado===e?'selected':''}>${labelEstado(e)}</option>`
+            ).join('')}
+          </select>
+        </div>
+        <div class="form-group-m">
+          <label class="form-label-m">Precio final (CLP)</label>
+          <input class="form-input-m" type="number" id="editPrecioFinal" value="${c.precio_final || ''}" placeholder="Ej: 12500000">
+        </div>
+        <div class="form-group-m">
+          <label class="form-label-m">Notas internas</label>
+          <textarea class="form-input-m" id="editNotas">${c.notas_admin || ''}</textarea>
+        </div>
+      </div>`;
+
+    const waText = encodeURIComponent(
+      `Hola ${c.nombre}, soy de Quinchos & Cocinas. Vi tu cotización #${c.id} para un proyecto de ${labelTipo(c.tipo)}. Me gustaría coordinar una visita sin costo para darte un presupuesto formal. ¿Tienes disponibilidad esta semana?`
+    );
+
+    document.getElementById('modalFooter').innerHTML = `
+      <button class="btn-sm btn-primary-sm" onclick="saveCotizacion()">Guardar cambios</button>
+      <a class="btn-sm btn-wa-sm" href="https://wa.me/${c.telefono.replace(/\D/g,'')}?text=${waText}" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        WhatsApp
+      </a>
+      <button class="btn-sm btn-ghost-sm" onclick="closeModal()">Cerrar</button>`;
+
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+
+  async function saveCotizacion() {
+    const estado      = document.getElementById('editEstado').value;
+    const precioFinal = parseInt(document.getElementById('editPrecioFinal').value) || null;
+    const notas       = document.getElementById('editNotas').value.trim() || null;
+    const { error }   = await db.from('cotizaciones').update({ estado, precio_final: precioFinal, notas_admin: notas }).eq('id', currentCotizacion.id);
+    if (!error) {
+      showToast('Guardado correctamente ✓');
+      closeModal();
+      loadCotizaciones();
+    } else {
+      showToast('Error al guardar');
+    }
+  }
+
+  function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+
+  // ── PRECIOS ──────────────────────────────────────────────────
+  async function loadPrecios() {
+    const { data } = await db.from('precios').select('*').order('id');
+    if (!data) return;
+    renderPrecios(data.filter(p => p.categoria === 'quincho'), 'preciosQuincho');
+    renderPrecios(data.filter(p => p.categoria === 'cocina'),  'preciosCocina');
+  }
+
+  function renderPrecios(items, containerId) {
+    document.getElementById(containerId).innerHTML = items.map(p => `
+      <div class="precio-row">
+        <div>
+          <div class="precio-label">${p.label}</div>
+          <div class="precio-unidad">${p.unidad}</div>
+        </div>
+        <div style="font-size:11px;color:#aaa;padding-right:4px;">CLP</div>
+        <input class="precio-input" type="number" id="precio_${p.id}" value="${p.precio}" onkeydown="if(event.key==='Enter')savePrecio(${p.id})">
+        <button class="btn-save-precio" id="savebtn_${p.id}" onclick="savePrecio(${p.id})">Guardar</button>
+      </div>`).join('');
+  }
+
+  async function savePrecio(id) {
+    const val = parseInt(document.getElementById(`precio_${id}`).value);
+    if (isNaN(val) || val < 0) return;
+    const btn = document.getElementById(`savebtn_${id}`);
+    btn.textContent = '...';
+    const { error } = await db.from('precios').update({ precio: val, actualizado_en: new Date().toISOString() }).eq('id', id);
+    if (!error) {
+      btn.textContent = '✓';
+      btn.classList.add('saved');
+      setTimeout(() => { btn.textContent = 'Guardar'; btn.classList.remove('saved'); }, 2000);
+      showToast('Precio actualizado ✓');
+    }
+  }
+
+  // ── HELPERS ──────────────────────────────────────────────────
+  function detailRow(k, v) { return `<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`; }
+  function labelTipo(t)   { return { quincho: 'Quincho', cocina: 'Cocina', ambos: 'Quincho + Cocina' }[t] || t; }
+  function labelEstado(e) { return { nueva: 'Nueva', revision: 'En revisión', enviada: 'Enviada', aceptada: 'Aceptada', rechazada: 'Rechazada' }[e] || e; }
+  function fmtFecha(d)    { return new Date(d).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: '2-digit' }); }
+  function fmtFechaLarga(d) { return new Date(d).toLocaleString('es-CL', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+  function formatCLP(n)   { return '$ ' + Math.round(n).toLocaleString('es-CL'); }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  init();
+</script>
+</body>
+</html>
