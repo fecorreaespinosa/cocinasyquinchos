@@ -117,6 +117,8 @@
     .btn-ghost-sm:hover { border-color: var(--carbon); }
     .btn-wa-sm { background: #25D366; color: #fff; }
     .btn-wa-sm:hover { background: #20b858; }
+    .btn-outlook-sm { background: #0078D4; color: #fff; }
+    .btn-outlook-sm:hover { background: #006BBF; }
 
     /* PRECIOS TAB */
     .precios-section { margin-bottom: 28px; }
@@ -420,9 +422,13 @@
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         Copiar link
       </button>
+      <button class="btn-sm btn-outlook-sm" onclick="enviarOutlook()" title="Abrir Outlook con email redactado">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Enviar por Outlook
+      </button>
       <a class="btn-sm btn-wa-sm" href="https://wa.me/${c.telefono.replace(/\D/g,'')}?text=${waLink}" target="_blank" rel="noopener">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-        WhatsApp + link
+        WhatsApp
       </a>
       <button class="btn-sm btn-ghost-sm" onclick="closeModal()">Cerrar</button>`;
 
@@ -490,6 +496,99 @@
 
   function copyLink(url) {
     navigator.clipboard.writeText(url).then(() => showToast('Link copiado al portapapeles ✓'));
+  }
+
+  function enviarOutlook() {
+    const c        = currentCotizacion;
+    const precio   = c.precio_final || c.precio_estimado || 0;
+    const numCot   = String(c.id).padStart(4, '0');
+    const cotLink  = `${location.origin}/cotizacion?token=${c.token || c.id}`;
+    const tipoProy = labelTipo(c.tipo);
+
+    // Construir resumen de items
+    let resumenItems = '';
+    if (['quincho','ambos'].includes(c.tipo) && c.quincho_m2) {
+      resumenItems += `   • Quincho: ${c.quincho_m2} m²`;
+      if (c.quincho_techo && c.quincho_techo !== 'ninguno') resumenItems += ` — techo ${c.quincho_techo}`;
+      resumenItems += '\n';
+      const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : [];
+      if (qOps.length) resumenItems += `     Incluye: ${qOps.map(k => k.replace('quincho_','')).join(', ')}\n`;
+    }
+    if (['cocina','ambos'].includes(c.tipo) && c.cocina_ml) {
+      resumenItems += `   • Cocina: ${c.cocina_ml} ml de muebles`;
+      if (c.cocina_meson && c.cocina_meson !== 'ninguno') resumenItems += ` — mesón ${c.cocina_meson}`;
+      resumenItems += '\n';
+      const cOps = Array.isArray(c.cocina_opciones) ? c.cocina_opciones : [];
+      if (cOps.length) resumenItems += `     Incluye: ${cOps.map(k => k.replace('cocina_','')).join(', ')}\n`;
+    }
+
+    const fechaHoy = new Date().toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' });
+    const validez  = new Date();
+    validez.setDate(validez.getDate() + 30);
+    const fechaVence = validez.toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' });
+
+    const asunto = `Cotización Formal N° ${numCot} — Quinchos & Cocinas`;
+
+    const cuerpo =
+`Estimado/a ${c.nombre},
+
+Junto con saludar cordialmente, nos complace hacerle llegar la cotización formal correspondiente a su proyecto.
+
+─────────────────────────────────────────
+COTIZACIÓN FORMAL N° ${numCot}
+Fecha de emisión: ${fechaHoy}
+─────────────────────────────────────────
+
+PROYECTO: ${tipoProy.toUpperCase()}
+${resumenItems}
+PRECIO TOTAL: ${formatCLP(precio)}
+─────────────────────────────────────────
+
+Esta cotización incluye:
+   ✓ Diseño 3D previo a la ejecución
+   ✓ Materiales e instalación
+   ✓ Mano de obra especializada
+   ✓ Supervisión del proyecto
+
+Puede ver el detalle completo de su cotización en el siguiente enlace:
+${cotLink}
+
+─────────────────────────────────────────
+PARA DAR INICIO A LA OBRA
+─────────────────────────────────────────
+
+Si está de acuerdo con la propuesta, le solicitamos confirmar su conformidad respondiendo este correo con un simple:
+
+   "Acepto la cotización N° ${numCot}"
+
+Una vez recibida su confirmación, coordinaremos una visita técnica sin costo para tomar medidas definitivas y establecer el calendario de ejecución.
+
+Esta cotización es válida hasta el ${fechaVence}.
+
+─────────────────────────────────────────
+
+Quedamos a su entera disposición para cualquier consulta o ajuste que requiera.
+
+Saludos cordiales,
+
+Quinchos & Cocinas
+Tel: +56 9 9497 5216
+Web: cocinasyquinchos.vercel.app
+
+─────────────────────────────────────────
+NOTA: Para adjuntar el PDF, abra la cotización en ${cotLink}, haga clic en "Descargar PDF" y adjunte el archivo a este email antes de enviarlo.
+─────────────────────────────────────────`;
+
+    const mailto = `mailto:${c.email || ''}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+
+    // Abrir PDF en nueva pestaña para que el admin lo descargue
+    window.open(cotLink, '_blank');
+
+    // Pequeño delay para que el PDF abra primero, luego Outlook
+    setTimeout(() => {
+      window.location.href = mailto;
+      showToast('Outlook abierto — adjunta el PDF descargado y envía ✓');
+    }, 800);
   }
 
   function showToast(msg) {
