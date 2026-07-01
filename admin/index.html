@@ -260,7 +260,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  emailjs.init('Ek5H113cN-W3LStrM');
+  emailjs.init({ publicKey: 'Ek5H113cN-W3LStrM' });
   const SUPA_URL = 'https://rkwudbnpqnmoszfwcwls.supabase.co';
   const SUPA_KEY = 'sb_publishable_tQeZg-Jb71FzYXwvBjm2kw_23MDzNKb';
   const { createClient } = window.supabase;
@@ -571,20 +571,22 @@ Tel: +56 9 9497 5216`;
     btn.disabled    = true;
 
     try {
-      await emailjs.send('service_ltplwpr', 'template_odlujqi', {
+      const resp = await emailjs.send('service_ltplwpr', 'template_odlujqi', {
         to_email: c.email,
         subject:  asunto,
         body:     cuerpo,
       });
+      console.log('EmailJS OK:', resp);
       showToast('Email enviado a ' + c.email + ' ✓');
-      // Marcar como enviada si aún está en nueva/revision
       if (['nueva','revision'].includes(c.estado)) {
         await db.from('cotizaciones').update({ estado: 'enviada' }).eq('id', c.id);
         loadCotizaciones();
       }
     } catch(err) {
-      console.error(err);
-      showToast('Error al enviar el email. Verifica la plantilla de EmailJS.');
+      console.error('EmailJS error:', err);
+      const detalle = err?.text || err?.message || JSON.stringify(err);
+      showToast('Error: ' + detalle);
+      alert('Error EmailJS:\n' + detalle);
     } finally {
       btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Enviar email';
       btn.disabled = false;
