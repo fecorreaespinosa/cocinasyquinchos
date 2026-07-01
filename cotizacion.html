@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotización — Quinchos & Cocinas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --carbon: #1C1A17; --carbon2: #2A2620; --sand: #C8B89A;
+      --cream: #F2EDE5; --copper: #E07A3A; --gray: #888780; --gray2: #5F5E5A;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: #f0ede8; color: var(--carbon); min-height: 100vh; }
+
+    /* TOOLBAR (no imprime) */
+    .toolbar { background: var(--carbon); padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .toolbar-logo { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--cream); }
+    .toolbar-logo span { color: var(--sand); }
+    .toolbar-actions { display: flex; gap: 10px; }
+    .btn-print { display: inline-flex; align-items: center; gap: 7px; background: var(--copper); color: #fff; border: none; border-radius: 5px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-print:hover { background: #C96A2C; }
+    .btn-wa { display: inline-flex; align-items: center; gap: 7px; background: #25D366; color: #fff; border: none; border-radius: 5px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+    .btn-wa:hover { background: #20b858; }
+
+    /* DOCUMENT */
+    .doc-wrap { max-width: 800px; margin: 32px auto; padding: 0 16px 60px; }
+    .doc { background: #fff; border-radius: 4px; box-shadow: 0 2px 24px rgba(0,0,0,0.08); overflow: hidden; }
+
+    /* HEADER */
+    .doc-header { background: var(--carbon); padding: 36px 48px; display: flex; justify-content: space-between; align-items: flex-start; }
+    .doc-brand { }
+    .doc-brand-name { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--cream); margin-bottom: 6px; }
+    .doc-brand-name span { color: var(--sand); }
+    .doc-brand-contact { font-size: 12px; color: rgba(200,184,154,0.6); line-height: 1.8; }
+    .doc-title-block { text-align: right; }
+    .doc-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(200,184,154,0.5); margin-bottom: 6px; }
+    .doc-num { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--cream); }
+    .doc-date { font-size: 12px; color: rgba(200,184,154,0.55); margin-top: 4px; }
+
+    /* BODY */
+    .doc-body { padding: 40px 48px; }
+
+    /* CLIENT */
+    .section { margin-bottom: 32px; }
+    .section-title { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--copper); margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid rgba(224,122,58,0.2); }
+    .client-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+    .client-field { }
+    .client-label { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+    .client-val { font-size: 14px; color: var(--carbon); font-weight: 500; }
+
+    /* LINE ITEMS */
+    .items-table { width: 100%; border-collapse: collapse; }
+    .items-cat { background: #faf9f7; }
+    .items-cat td { padding: 10px 14px; font-size: 11px; font-weight: 500; color: var(--gray2); text-transform: uppercase; letter-spacing: 0.07em; }
+    .item-row td { padding: 9px 14px; font-size: 13px; border-bottom: 0.5px solid rgba(28,26,23,0.06); }
+    .item-row:last-child td { border-bottom: none; }
+    .item-name { color: var(--carbon); }
+    .item-detail { font-size: 11px; color: var(--gray); }
+    .item-price { text-align: right; font-weight: 500; color: var(--carbon); white-space: nowrap; }
+
+    /* TOTALS */
+    .totals-block { background: #faf9f7; border-radius: 4px; padding: 20px 24px; margin-top: 24px; }
+    .total-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; color: var(--gray2); }
+    .total-row.final { padding-top: 12px; margin-top: 6px; border-top: 1.5px solid var(--copper); }
+    .total-row.final .total-label { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--carbon); }
+    .total-row.final .total-val   { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--copper); }
+
+    /* NOTES */
+    .notes-block { background: rgba(224,122,58,0.05); border-left: 3px solid var(--copper); border-radius: 0 4px 4px 0; padding: 14px 18px; margin-top: 24px; font-size: 13px; color: var(--carbon2); line-height: 1.65; }
+
+    /* INCLUDES */
+    .includes { margin-top: 20px; }
+    .includes-title { font-size: 11px; font-weight: 500; color: var(--gray2); margin-bottom: 8px; }
+    .includes-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .includes-list li { font-size: 12px; color: var(--gray2); display: flex; align-items: center; gap: 6px; }
+    .includes-list li::before { content: '✓'; color: var(--copper); font-size: 11px; }
+
+    /* VALIDITY */
+    .validity { margin-top: 20px; font-size: 11px; color: var(--gray); line-height: 1.6; }
+
+    /* FOOTER */
+    .doc-footer { background: var(--carbon2); padding: 20px 48px; display: flex; justify-content: space-between; align-items: center; }
+    .doc-footer-left { font-size: 11px; color: rgba(200,184,154,0.5); line-height: 1.7; }
+    .signature-block { text-align: right; }
+    .signature-line { width: 160px; border-top: 1px solid rgba(200,184,154,0.3); margin-bottom: 6px; margin-left: auto; }
+    .signature-label { font-size: 10px; color: rgba(200,184,154,0.4); }
+
+    /* LOADING / ERROR */
+    .state-wrap { display: flex; align-items: center; justify-content: center; min-height: 60vh; flex-direction: column; gap: 16px; color: var(--gray2); }
+    .spinner { width: 36px; height: 36px; border: 3px solid rgba(28,26,23,0.1); border-top-color: var(--copper); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .state-msg { font-size: 15px; }
+
+    /* PRINT */
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none !important; }
+      .doc-wrap { margin: 0; padding: 0; max-width: 100%; }
+      .doc { box-shadow: none; border-radius: 0; }
+      @page { margin: 0; size: A4; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="toolbar" id="toolbar">
+  <div class="toolbar-logo">Quinchos<span>&</span>Cocinas</div>
+  <div class="toolbar-actions">
+    <a class="btn-wa" id="btnWa" href="#" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      Enviar por WhatsApp
+    </a>
+    <button class="btn-print" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Descargar PDF
+    </button>
+  </div>
+</div>
+
+<div id="stateWrap" class="state-wrap">
+  <div class="spinner"></div>
+  <div class="state-msg">Cargando cotización...</div>
+</div>
+
+<div class="doc-wrap" id="docWrap" style="display:none;">
+  <div class="doc">
+    <!-- HEADER -->
+    <div class="doc-header">
+      <div class="doc-brand">
+        <div class="doc-brand-name">Quinchos<span>&</span>Cocinas</div>
+        <div class="doc-brand-contact">
+          Santiago, Chile<br>
+          +56 9 9497 5216<br>
+          cocinasyquinchos.vercel.app
+        </div>
+      </div>
+      <div class="doc-title-block">
+        <div class="doc-label">Cotización formal</div>
+        <div class="doc-num" id="docNum">N° —</div>
+        <div class="doc-date" id="docDate"></div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="doc-body">
+      <!-- CLIENTE -->
+      <div class="section">
+        <div class="section-title">Datos del cliente</div>
+        <div class="client-grid" id="clientGrid"></div>
+      </div>
+
+      <!-- PROYECTO -->
+      <div class="section">
+        <div class="section-title">Detalle del proyecto</div>
+        <table class="items-table" id="itemsTable"></table>
+      </div>
+
+      <!-- TOTALES -->
+      <div class="totals-block" id="totalsBlock"></div>
+
+      <!-- NOTAS -->
+      <div id="notasWrap"></div>
+
+      <!-- INCLUYE -->
+      <div class="includes">
+        <div class="includes-title">Este presupuesto incluye:</div>
+        <ul class="includes-list">
+          <li>Diseño 3D previo a la ejecución</li>
+          <li>Materiales e instalación</li>
+          <li>Mano de obra especializada</li>
+          <li>Supervisión del proyecto</li>
+        </ul>
+      </div>
+
+      <div class="validity" id="validity"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="doc-footer">
+      <div class="doc-footer-left">
+        Quinchos & Cocinas · Santiago, Chile<br>
+        +56 9 9497 5216
+      </div>
+      <div class="signature-block">
+        <div class="signature-line"></div>
+        <div class="signature-label">Firma y timbre</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPA_URL = 'https://rkwudbnpqnmoszfwcwls.supabase.co';
+  const SUPA_KEY = 'sb_publishable_tQeZg-Jb71FzYXwvBjm2kw_23MDzNKb';
+  const { createClient } = window.supabase;
+  const db = createClient(SUPA_URL, SUPA_KEY);
+
+  const PRECIOS_FALLBACK = [
+    { item_key:'quincho_base_m2',       label:'Quincho (base)',          precio:450000 },
+    { item_key:'quincho_techo_madera',  label:'Techo madera nativa',     precio:180000 },
+    { item_key:'quincho_techo_zinc',    label:'Techo zinc',              precio:95000  },
+    { item_key:'quincho_parrilla',      label:'Parrilla empotrada',      precio:350000 },
+    { item_key:'quincho_iluminacion',   label:'Iluminación decorativa',  precio:120000 },
+    { item_key:'quincho_meson_hormigon',label:'Mesón hormigón',          precio:280000 },
+    { item_key:'quincho_fogon',         label:'Fogón a leña',            precio:220000 },
+    { item_key:'quincho_tv',            label:'Soporte TV + instalación',precio:85000  },
+    { item_key:'cocina_base_ml',        label:'Cocina (base)',           precio:380000 },
+    { item_key:'cocina_isla',           label:'Isla central',            precio:650000 },
+    { item_key:'cocina_meson_cuarzo',   label:'Mesón cuarzo',           precio:95000  },
+    { item_key:'cocina_meson_granito',  label:'Mesón granito',          precio:75000  },
+    { item_key:'cocina_meson_acero',    label:'Mesón acero inox',       precio:85000  },
+    { item_key:'cocina_cajones',        label:'Cajones con blandaje',    precio:145000 },
+    { item_key:'cocina_campana',        label:'Campana extractora',      precio:180000 },
+    { item_key:'cocina_horno',          label:'Horno empotrado',         precio:120000 },
+  ];
+
+  function formatCLP(n) { return '$ ' + Math.round(n).toLocaleString('es-CL'); }
+  function labelTipo(t) { return {quincho:'Quincho',cocina:'Cocina',ambos:'Quincho + Cocina'}[t]||t; }
+
+  async function load() {
+    const params = new URLSearchParams(location.search);
+    const token  = params.get('token');
+    const idParam = params.get('id');
+
+    if (!token && !idParam) { showError('Link de cotización inválido.'); return; }
+
+    let cotQuery = db.from('cotizaciones').select('*');
+    if (token)   cotQuery = cotQuery.eq('token', token);
+    else         cotQuery = cotQuery.eq('id', idParam);
+
+    const [{ data: cots, error: cotErr }, { data: precsData }] = await Promise.all([
+      cotQuery.single(),
+      db.from('precios').select('*'),
+    ]);
+
+    if (cotErr || !cots) { showError('No se encontró la cotización. El link puede haber expirado.'); return; }
+
+    const c      = cots;
+    const precs  = (precsData && precsData.length) ? precsData : PRECIOS_FALLBACK;
+    const getP   = (key) => precs.find(p => p.item_key === key)?.precio ?? 0;
+
+    // BUILD LINE ITEMS
+    const lines = [];
+    if (['quincho','ambos'].includes(c.tipo)) {
+      const m2 = c.quincho_m2 || 0;
+      lines.push({ cat:'quincho', name:`Superficie: ${m2} m²`, detail: `${m2} m² × ${formatCLP(getP('quincho_base_m2'))}`, price: getP('quincho_base_m2') * m2 });
+      if (c.quincho_techo && c.quincho_techo !== 'ninguno') {
+        const p = getP(`quincho_techo_${c.quincho_techo}`);
+        lines.push({ cat:'quincho', name: c.quincho_techo==='madera'?'Techo madera nativa':'Techo zinc', detail:`${m2} m² × ${formatCLP(p)}`, price: p * m2 });
+      }
+      const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : [];
+      qOps.forEach(key => {
+        const pr = precs.find(p => p.item_key === key);
+        if (pr) lines.push({ cat:'quincho', name: pr.label, detail:'', price: pr.precio });
+      });
+    }
+    if (['cocina','ambos'].includes(c.tipo)) {
+      const ml = c.cocina_ml || 0;
+      lines.push({ cat:'cocina', name:`Muebles: ${ml} ml`, detail:`${ml} ml × ${formatCLP(getP('cocina_base_ml'))}`, price: getP('cocina_base_ml') * ml });
+      if (c.cocina_meson && c.cocina_meson !== 'ninguno') {
+        const p = getP(`cocina_meson_${c.cocina_meson}`);
+        const mn = {cuarzo:'Mesón cuarzo',granito:'Mesón granito',acero:'Mesón acero inox'}[c.cocina_meson];
+        lines.push({ cat:'cocina', name: mn, detail:`${ml} ml × ${formatCLP(p)}`, price: p * ml });
+      }
+      const cOps = Array.isArray(c.cocina_opciones) ? c.cocina_opciones : [];
+      cOps.forEach(key => {
+        const pr = precs.find(p => p.item_key === key);
+        if (pr) lines.push({ cat:'cocina', name: pr.label, detail:'', price: pr.precio });
+      });
+    }
+
+    const estimado = lines.reduce((s, l) => s + l.price, 0);
+    const final    = c.precio_final || null;
+
+    // RENDER
+    document.getElementById('docNum').textContent = `N° ${String(c.id).padStart(4,'0')}`;
+    const fecha = new Date(c.creada_en);
+    document.getElementById('docDate').textContent = fecha.toLocaleDateString('es-CL', { day:'2-digit', month:'long', year:'numeric' });
+
+    // CLIENT
+    const fields = [
+      ['Cliente', c.nombre],
+      ['Teléfono', c.telefono],
+      c.email   ? ['Email',     c.email]    : null,
+      c.comuna  ? ['Comuna',    c.comuna]   : null,
+      c.direccion? ['Dirección', c.direccion]: null,
+      ['Tipo de proyecto', labelTipo(c.tipo)],
+    ].filter(Boolean);
+    document.getElementById('clientGrid').innerHTML = fields.map(([k,v]) =>
+      `<div class="client-field"><div class="client-label">${k}</div><div class="client-val">${v}</div></div>`
+    ).join('');
+
+    // LINE ITEMS TABLE
+    let tableHtml = '';
+    const cats = [...new Set(lines.map(l => l.cat))];
+    cats.forEach(cat => {
+      const catLabel = cat === 'quincho' ? '🏠 Quincho' : '🍳 Cocina';
+      tableHtml += `<tr class="items-cat"><td colspan="2">${catLabel}</td></tr>`;
+      lines.filter(l => l.cat === cat).forEach(l => {
+        tableHtml += `<tr class="item-row">
+          <td><div class="item-name">${l.name}</div>${l.detail ? `<div class="item-detail">${l.detail}</div>` : ''}</td>
+          <td class="item-price">${formatCLP(l.price)}</td>
+        </tr>`;
+      });
+    });
+    document.getElementById('itemsTable').innerHTML = tableHtml;
+
+    // TOTALS
+    let totalsHtml = '';
+    if (estimado > 0) totalsHtml += `<div class="total-row"><span class="total-label">Precio estimado</span><span>${formatCLP(estimado)}</span></div>`;
+    if (final) {
+      totalsHtml += `<div class="total-row final"><span class="total-label">Precio final</span><span class="total-val">${formatCLP(final)}</span></div>`;
+    } else {
+      totalsHtml += `<div class="total-row final"><span class="total-label">Precio estimado</span><span class="total-val">${formatCLP(estimado)}</span></div>`;
+    }
+    document.getElementById('totalsBlock').innerHTML = totalsHtml;
+
+    // NOTAS
+    if (c.notas_admin) {
+      document.getElementById('notasWrap').innerHTML =
+        `<div class="notes-block"><strong>Observaciones:</strong> ${c.notas_admin}</div>`;
+    }
+
+    // VALIDITY
+    const validUntil = new Date(fecha);
+    validUntil.setDate(validUntil.getDate() + 30);
+    document.getElementById('validity').innerHTML =
+      `Esta cotización es válida hasta el <strong>${validUntil.toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})}</strong>. Sujeta a confirmación tras visita técnica sin costo.`;
+
+    // WA BUTTON
+    const waMsg = encodeURIComponent(
+      `Hola ${c.nombre}, te enviamos tu cotización formal N° ${String(c.id).padStart(4,'0')} de Quinchos & Cocinas.\n\nPuedes verla aquí: ${location.href}\n\n¿Tienes alguna consulta?`
+    );
+    document.getElementById('btnWa').href = `https://wa.me/${c.telefono.replace(/\D/g,'')}?text=${waMsg}`;
+
+    document.getElementById('stateWrap').style.display = 'none';
+    document.getElementById('docWrap').style.display   = 'block';
+  }
+
+  function showError(msg) {
+    document.getElementById('stateWrap').innerHTML =
+      `<div style="font-size:40px">⚠️</div><div class="state-msg">${msg}</div>`;
+  }
+
+  load();
+</script>
+</body>
+</html>
