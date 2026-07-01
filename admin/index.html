@@ -532,63 +532,42 @@
     const cuerpo =
 `Estimado/a ${c.nombre},
 
-Junto con saludar cordialmente, nos complace hacerle llegar la cotización formal correspondiente a su proyecto.
+Le enviamos la cotización formal N° ${numCot} para su proyecto de ${tipoProy}.
 
-─────────────────────────────────────────
-COTIZACIÓN FORMAL N° ${numCot}
-Fecha de emisión: ${fechaHoy}
-─────────────────────────────────────────
-
-PROYECTO: ${tipoProy.toUpperCase()}
+RESUMEN DEL PROYECTO
 ${resumenItems}
 PRECIO TOTAL: ${formatCLP(precio)}
-─────────────────────────────────────────
+Válida hasta: ${fechaVence}
 
-Esta cotización incluye:
-   ✓ Diseño 3D previo a la ejecución
-   ✓ Materiales e instalación
-   ✓ Mano de obra especializada
-   ✓ Supervisión del proyecto
-
-Puede ver el detalle completo de su cotización en el siguiente enlace:
+Ver cotización completa en:
 ${cotLink}
 
-─────────────────────────────────────────
-PARA DAR INICIO A LA OBRA
-─────────────────────────────────────────
-
-Si está de acuerdo con la propuesta, le solicitamos confirmar su conformidad respondiendo este correo con un simple:
+Para dar inicio a la obra, le solicitamos confirmar respondiendo este correo con:
 
    "Acepto la cotización N° ${numCot}"
 
-Una vez recibida su confirmación, coordinaremos una visita técnica sin costo para tomar medidas definitivas y establecer el calendario de ejecución.
+Tras su confirmación coordinaremos una visita técnica sin costo para tomar medidas definitivas e iniciar el proyecto.
 
-Esta cotización es válida hasta el ${fechaVence}.
-
-─────────────────────────────────────────
-
-Quedamos a su entera disposición para cualquier consulta o ajuste que requiera.
+Quedamos a su disposición para cualquier consulta.
 
 Saludos cordiales,
-
 Quinchos & Cocinas
-Tel: +56 9 9497 5216
-Web: cocinasyquinchos.vercel.app
-
-─────────────────────────────────────────
-NOTA: Para adjuntar el PDF, abra la cotización en ${cotLink}, haga clic en "Descargar PDF" y adjunte el archivo a este email antes de enviarlo.
-─────────────────────────────────────────`;
+Tel: +56 9 9497 5216`;
 
     const mailto = `mailto:${c.email || ''}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
 
-    // Abrir PDF en nueva pestaña para que el admin lo descargue
+    // Abrir PDF en nueva pestaña
     window.open(cotLink, '_blank');
 
-    // Pequeño delay para que el PDF abra primero, luego Outlook
+    // Abrir Outlook via link temporal (más confiable que window.location.href)
     setTimeout(() => {
-      window.location.href = mailto;
-      showToast('Outlook abierto — adjunta el PDF descargado y envía ✓');
-    }, 800);
+      const a = document.createElement('a');
+      a.href = mailto;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Outlook abierto — adjunta el PDF y envía ✓');
+    }, 600);
   }
 
   function showToast(msg) {
