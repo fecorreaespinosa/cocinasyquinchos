@@ -117,8 +117,8 @@
     .btn-ghost-sm:hover { border-color: var(--carbon); }
     .btn-wa-sm { background: #25D366; color: #fff; }
     .btn-wa-sm:hover { background: #20b858; }
-    .btn-outlook-sm { background: #0078D4; color: #fff; }
-    .btn-outlook-sm:hover { background: #006BBF; }
+    .btn-email-sm { background: #7C3AED; color: #fff; }
+    .btn-email-sm:hover { background: #6D28D9; }
 
     /* PRECIOS TAB */
     .precios-section { margin-bottom: 28px; }
@@ -257,7 +257,9 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+  emailjs.init('Ek5H113cN-W3LStrM');
   const SUPA_URL = 'https://rkwudbnpqnmoszfwcwls.supabase.co';
   const SUPA_KEY = 'sb_publishable_tQeZg-Jb71FzYXwvBjm2kw_23MDzNKb';
   const { createClient } = window.supabase;
@@ -422,9 +424,9 @@
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         Copiar link
       </button>
-      <button class="btn-sm btn-outlook-sm" onclick="enviarOutlook()" title="Abrir Outlook con email redactado">
+      <button class="btn-sm btn-email-sm" id="btnEmail" onclick="enviarEmail()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Enviar por Outlook
+        Enviar email
       </button>
       <a class="btn-sm btn-wa-sm" href="https://wa.me/${c.telefono.replace(/\D/g,'')}?text=${waLink}" target="_blank" rel="noopener">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
@@ -498,37 +500,41 @@
     navigator.clipboard.writeText(url).then(() => showToast('Link copiado al portapapeles ✓'));
   }
 
-  function enviarOutlook() {
-    const c        = currentCotizacion;
+  async function enviarEmail() {
+    const c = currentCotizacion;
+
+    if (!c.email) {
+      showToast('⚠ Este cliente no tiene email registrado');
+      return;
+    }
+
+    const btn      = document.getElementById('btnEmail');
     const precio   = c.precio_final || c.precio_estimado || 0;
     const numCot   = String(c.id).padStart(4, '0');
     const cotLink  = `${location.origin}/cotizacion?token=${c.token || c.id}`;
     const tipoProy = labelTipo(c.tipo);
 
-    // Construir resumen de items
     let resumenItems = '';
     if (['quincho','ambos'].includes(c.tipo) && c.quincho_m2) {
-      resumenItems += `   • Quincho: ${c.quincho_m2} m²`;
-      if (c.quincho_techo && c.quincho_techo !== 'ninguno') resumenItems += ` — techo ${c.quincho_techo}`;
-      resumenItems += '\n';
+      resumenItems += `• Quincho: ${c.quincho_m2} m²`;
+      if (c.quincho_techo && c.quincho_techo !== 'ninguno') resumenItems += ` (techo ${c.quincho_techo})`;
       const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : [];
-      if (qOps.length) resumenItems += `     Incluye: ${qOps.map(k => k.replace('quincho_','')).join(', ')}\n`;
+      if (qOps.length) resumenItems += ` + ${qOps.map(k=>k.replace('quincho_','')).join(', ')}`;
+      resumenItems += '\n';
     }
     if (['cocina','ambos'].includes(c.tipo) && c.cocina_ml) {
-      resumenItems += `   • Cocina: ${c.cocina_ml} ml de muebles`;
-      if (c.cocina_meson && c.cocina_meson !== 'ninguno') resumenItems += ` — mesón ${c.cocina_meson}`;
-      resumenItems += '\n';
+      resumenItems += `• Cocina: ${c.cocina_ml} ml`;
+      if (c.cocina_meson && c.cocina_meson !== 'ninguno') resumenItems += ` (mesón ${c.cocina_meson})`;
       const cOps = Array.isArray(c.cocina_opciones) ? c.cocina_opciones : [];
-      if (cOps.length) resumenItems += `     Incluye: ${cOps.map(k => k.replace('cocina_','')).join(', ')}\n`;
+      if (cOps.length) resumenItems += ` + ${cOps.map(k=>k.replace('cocina_','')).join(', ')}`;
+      resumenItems += '\n';
     }
 
-    const fechaHoy = new Date().toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' });
-    const validez  = new Date();
+    const validez = new Date();
     validez.setDate(validez.getDate() + 30);
     const fechaVence = validez.toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' });
 
     const asunto = `Cotización Formal N° ${numCot} — Quinchos & Cocinas`;
-
     const cuerpo =
 `Estimado/a ${c.nombre},
 
@@ -539,10 +545,10 @@ ${resumenItems}
 PRECIO TOTAL: ${formatCLP(precio)}
 Válida hasta: ${fechaVence}
 
-Ver cotización completa en:
+Ver cotización completa aquí:
 ${cotLink}
 
-Para dar inicio a la obra, le solicitamos confirmar respondiendo este correo con:
+Para dar inicio a la obra, responda este correo con:
 
    "Acepto la cotización N° ${numCot}"
 
@@ -554,20 +560,28 @@ Saludos cordiales,
 Quinchos & Cocinas
 Tel: +56 9 9497 5216`;
 
-    const mailto = `mailto:${c.email || ''}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+    btn.textContent = 'Enviando...';
+    btn.disabled    = true;
 
-    // Abrir PDF en nueva pestaña
-    window.open(cotLink, '_blank');
-
-    // Abrir Outlook via link temporal (más confiable que window.location.href)
-    setTimeout(() => {
-      const a = document.createElement('a');
-      a.href = mailto;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      showToast('Outlook abierto — adjunta el PDF y envía ✓');
-    }, 600);
+    try {
+      await emailjs.send('service_ltplwpr', 'template_odlujqi', {
+        to_email: c.email,
+        subject:  asunto,
+        body:     cuerpo,
+      });
+      showToast('Email enviado a ' + c.email + ' ✓');
+      // Marcar como enviada si aún está en nueva/revision
+      if (['nueva','revision'].includes(c.estado)) {
+        await db.from('cotizaciones').update({ estado: 'enviada' }).eq('id', c.id);
+        loadCotizaciones();
+      }
+    } catch(err) {
+      console.error(err);
+      showToast('Error al enviar el email. Verifica la plantilla de EmailJS.');
+    } finally {
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Enviar email';
+      btn.disabled = false;
+    }
   }
 
   function showToast(msg) {
