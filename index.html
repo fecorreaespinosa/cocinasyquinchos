@@ -1104,7 +1104,7 @@
 
     <div class="slider-outer">
       <div>
-        <div class="slider-wrap" id="sliderWrap" role="img" aria-label="Comparación antes y después de un quincho en Vitacura">
+        <div class="slider-wrap" id="sliderWrap" role="img" aria-label="Comparación antes y después · Herrajes Sur">
           <div class="slider-before">
             <svg width="100%" height="340" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
               <rect width="600" height="340" fill="#2A2620"/>
@@ -1112,8 +1112,9 @@
               <rect x="80" y="100" width="100" height="80" rx="2" fill="#3D3A34" opacity="0.4"/>
               <rect x="200" y="110" width="80" height="60" rx="2" fill="#3D3A34" opacity="0.3"/>
               <line x1="40" y1="280" x2="560" y2="280" stroke="#C8B89A" stroke-width="0.5" opacity="0.1"/>
-              <text x="300" y="316" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#888780">Patio sin uso — 2022</text>
+              <text x="300" y="316" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#888780">Herrajes Sur — Antes</text>
             </svg>
+            <img id="sliderBeforeImg" src="" alt="Antes" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;">
           </div>
           <div class="slider-after" id="sliderAfter">
             <svg width="100%" height="340" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -1124,8 +1125,9 @@
               <line x1="300" y1="88" x2="300" y2="180" stroke="#C8B89A" stroke-width="0.5" opacity="0.2"/>
               <rect x="130" y="205" width="120" height="60" rx="4" fill="#E07A3A" opacity="0.22"/>
               <rect x="280" y="205" width="130" height="60" rx="4" fill="#C8B89A" opacity="0.12"/>
-              <text x="300" y="316" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#C8B89A">Quincho equipado — 2023</text>
+              <text x="300" y="316" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="12" fill="#C8B89A">Herrajes Sur — Después</text>
             </svg>
+            <img id="sliderAfterImg" src="" alt="Después" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;">
           </div>
           <div class="slider-divider" id="sliderDiv"></div>
           <div class="slider-handle" id="sliderHandle" aria-hidden="true">
@@ -1134,62 +1136,62 @@
           <div class="slider-badge before">Antes</div>
           <div class="slider-badge after">Después</div>
           <div class="slider-footer">
-            <span class="slider-footer-txt">Vitacura · Quincho + parrilla + cubierta</span>
+            <span class="slider-footer-txt" id="sliderFooterTxt">Herrajes Sur</span>
             <span class="slider-pct" id="sliderPct">50%</span>
           </div>
         </div>
       </div>
 
-      <div class="slider-thumbnails" role="list" aria-label="Otros proyectos antes y después">
-        <div class="thumb-card active" role="listitem" tabindex="0">
-          <div class="thumb-title">Quincho Vitacura</div>
+      <div class="slider-thumbnails" role="list" aria-label="Proyectos antes y después">
+        <div class="thumb-card active" role="listitem" tabindex="0" data-index="0">
+          <div class="thumb-title">Herrajes Sur</div>
           <div class="thumb-meta">
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Vitacura
+              Santiago
             </span>
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              6 semanas
+              —
             </span>
           </div>
         </div>
-        <div class="thumb-card" role="listitem" tabindex="0">
-          <div class="thumb-title">Cocina Las Condes</div>
+        <div class="thumb-card" role="listitem" tabindex="0" data-index="1">
+          <div class="thumb-title">Proyecto 2</div>
           <div class="thumb-meta">
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Las Condes
+              Santiago
             </span>
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              4 semanas
+              —
             </span>
           </div>
         </div>
-        <div class="thumb-card" role="listitem" tabindex="0">
-          <div class="thumb-title">Quincho + cocina Lo Barnechea</div>
+        <div class="thumb-card" role="listitem" tabindex="0" data-index="2">
+          <div class="thumb-title">Proyecto 3</div>
           <div class="thumb-meta">
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Lo Barnechea
+              Santiago
             </span>
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              10 semanas
+              —
             </span>
           </div>
         </div>
-        <div class="thumb-card" role="listitem" tabindex="0">
-          <div class="thumb-title">Remodelación cocina La Reina</div>
+        <div class="thumb-card" role="listitem" tabindex="0" data-index="3">
+          <div class="thumb-title">Proyecto 4</div>
           <div class="thumb-meta">
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              La Reina
+              Santiago
             </span>
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              3 semanas
+              —
             </span>
           </div>
         </div>
@@ -1389,11 +1391,39 @@
     document.addEventListener('touchmove', e => { if (dragging) setPct(e.touches[0].clientX); }, { passive: true });
     document.addEventListener('touchend',  ()  => { dragging = false; });
 
-    /* ── Thumbnail cards (proyectos) ── */
+    /* ── Antes/después: proyectos ── */
+    const adProjects = [
+      { desc: 'Herrajes Sur', beforeSrc: 'images/herrajes-sur-antes.jpg', afterSrc: 'images/herrajes-sur-despues.jpg' },
+      { desc: 'Proyecto 2',   beforeSrc: '', afterSrc: '' },
+      { desc: 'Proyecto 3',   beforeSrc: '', afterSrc: '' },
+      { desc: 'Proyecto 4',   beforeSrc: '', afterSrc: '' },
+    ];
+    const sliderBeforeImg = document.getElementById('sliderBeforeImg');
+    const sliderAfterImg  = document.getElementById('sliderAfterImg');
+    const sliderFooterTxt = document.getElementById('sliderFooterTxt');
+
+    function loadAdProject(idx) {
+      const proj = adProjects[idx] || adProjects[0];
+      sliderFooterTxt.textContent = proj.desc;
+      if (sliderBeforeImg) {
+        sliderBeforeImg.src          = proj.beforeSrc;
+        sliderBeforeImg.style.display = proj.beforeSrc ? 'block' : 'none';
+      }
+      if (sliderAfterImg) {
+        sliderAfterImg.src           = proj.afterSrc;
+        sliderAfterImg.style.display  = proj.afterSrc  ? 'block' : 'none';
+      }
+      after.style.clipPath = 'inset(0 0 0 50%)';
+      divEl.style.left     = '50%';
+      handle.style.left    = '50%';
+      pctEl.textContent    = '50%';
+    }
+
     document.querySelectorAll('.thumb-card').forEach(card => {
       card.addEventListener('click', function() {
         document.querySelectorAll('.thumb-card').forEach(c => c.classList.remove('active'));
         this.classList.add('active');
+        loadAdProject(parseInt(this.dataset.index) || 0);
       });
       card.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
