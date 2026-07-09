@@ -111,7 +111,7 @@
       min-height: 92vh;
       display: flex;
       align-items: flex-end;
-      padding: 60px 40px 56px;
+      padding: 0;
       overflow: hidden;
       background: var(--carbon);
     }
@@ -132,17 +132,24 @@
     .carousel-container {
       position: absolute;
       inset: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
       z-index: 0;
     }
 
     .carousel-left {
       position: relative;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
       background: var(--carbon2);
       z-index: 0;
+    }
+
+    .carousel-left::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(28,26,23,0.18) 0%, rgba(28,26,23,0.04) 45%, rgba(28,26,23,0.12) 100%);
+      pointer-events: none;
     }
 
     .carousel-slides {
@@ -170,13 +177,6 @@
       height: 100%;
       object-fit: cover;
       display: block;
-    }
-
-    .carousel-right {
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      gap: 2px;
-      z-index: 0;
     }
 
     .carousel-dots {
@@ -213,9 +213,9 @@
       inset: 0;
       background: linear-gradient(
         160deg,
-        rgba(28,26,23,0.45) 0%,
-        rgba(28,26,23,0.72) 55%,
-        rgba(28,26,23,0.92) 100%
+        rgba(28,26,23,0.06) 0%,
+        rgba(28,26,23,0.10) 55%,
+        rgba(28,26,23,0.14) 100%
       );
       z-index: 1;
     }
@@ -224,6 +224,7 @@
       position: relative;
       z-index: 2;
       max-width: 580px;
+      padding: 60px 40px 56px;
     }
 
     .hero-stats {
@@ -1020,10 +1021,6 @@
           <span class="carousel-dot" data-slide="1"></span>
           <span class="carousel-dot" data-slide="2"></span>
         </div>
-      </div>
-      <div class="carousel-right">
-        <div style="background: var(--carbon3);"></div>
-        <div style="background: var(--carbon2);"></div>
       </div>
     </div>
     <div class="hero-overlay"></div>
