@@ -135,12 +135,14 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2px;
+      z-index: 0;
     }
 
     .carousel-left {
       position: relative;
       overflow: hidden;
       background: var(--carbon2);
+      z-index: 0;
     }
 
     .carousel-slides {
@@ -167,12 +169,14 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .carousel-right {
       display: grid;
       grid-template-rows: 1fr 1fr;
       gap: 2px;
+      z-index: 0;
     }
 
     .carousel-dots {
@@ -181,7 +185,7 @@
       left: 40px;
       display: flex;
       gap: 8px;
-      z-index: 10;
+      z-index: 3;
     }
 
     .carousel-dot {
@@ -220,6 +224,15 @@
       position: relative;
       z-index: 2;
       max-width: 580px;
+    }
+
+    .hero-stats {
+      position: absolute;
+      top: 32px;
+      right: 40px;
+      z-index: 2;
+      display: flex;
+      gap: 2px;
     }
 
     .hero-eyebrow {
@@ -295,15 +308,6 @@
     .btn-ghost:hover { color: var(--cream); }
     .btn-ghost svg { transition: transform 0.2s; }
     .btn-ghost:hover svg { transform: translateX(3px); }
-
-    .hero-stats {
-      position: absolute;
-      top: 32px;
-      right: 40px;
-      z-index: 2;
-      display: flex;
-      gap: 2px;
-    }
 
     .hero-stat {
       background: rgba(28,26,23,0.7);
@@ -1508,33 +1512,34 @@
     });
 
     /* ── Carousel animation ── */
-    let currentSlide = 0;
     const slides = document.querySelectorAll('.carousel-slide');
     const dots = document.querySelectorAll('.carousel-dot');
-    const totalSlides = slides.length;
 
-    function showSlide(n) {
-      slides.forEach(slide => slide.classList.remove('active'));
-      dots.forEach(dot => dot.classList.remove('active'));
-      slides[n].classList.add('active');
-      dots[n].classList.add('active');
-    }
+    if (slides.length > 0 && dots.length > 0) {
+      let currentSlide = 0;
+      const totalSlides = slides.length;
 
-    function nextSlide() {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      showSlide(currentSlide);
-    }
+      function showSlide(n) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        const safeIndex = (n + totalSlides) % totalSlides;
+        slides[safeIndex].classList.add('active');
+        dots[safeIndex].classList.add('active');
+        currentSlide = safeIndex;
+      }
 
-    // Change slide every 5 seconds
-    setInterval(nextSlide, 5000);
+      function nextSlide() {
+        showSlide(currentSlide + 1);
+      }
 
-    // Dot click navigation
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', () => {
-        currentSlide = index;
-        showSlide(currentSlide);
+      setInterval(nextSlide, 5000);
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          showSlide(index);
+        });
       });
-    });
+    }
 
     /* ── Nav sticky scroll ── */
     const nav = document.querySelector('.nav');
