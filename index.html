@@ -128,6 +128,75 @@
     .hero-bg-rt { background: var(--carbon3); }
     .hero-bg-rb { background: var(--carbon2); }
 
+    /* ─── CAROUSEL ────────────────────────────────────── */
+    .carousel-container {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .carousel-left {
+      position: relative;
+      overflow: hidden;
+      background: var(--carbon2);
+    }
+
+    .carousel-slides {
+      display: flex;
+      position: absolute;
+      inset: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    .carousel-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    .carousel-slide.active {
+      opacity: 1;
+    }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .carousel-right {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(200,184,154,0.4);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .carousel-dot.active {
+      background: var(--copper);
+    }
+
     /* SVG texture pattern inside hero panels */
     .hero-texture {
       position: absolute;
@@ -929,22 +998,28 @@
 
   <!-- ── HERO ── -->
   <section class="hero" aria-label="Bienvenida">
-    <div class="hero-bg">
-      <div class="hero-bg-l">
-        <svg class="hero-texture" viewBox="0 0 400 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-          <line x1="0" y1="100" x2="400" y2="100" stroke="#C8B89A" stroke-width="0.5"/>
-          <line x1="0" y1="250" x2="400" y2="250" stroke="#C8B89A" stroke-width="0.5"/>
-          <line x1="0" y1="400" x2="400" y2="400" stroke="#C8B89A" stroke-width="0.5"/>
-          <line x1="100" y1="0" x2="100" y2="600" stroke="#C8B89A" stroke-width="0.5"/>
-          <line x1="260" y1="0" x2="260" y2="600" stroke="#C8B89A" stroke-width="0.5"/>
-          <rect x="40" y="120" width="140" height="100" rx="4" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.6"/>
-          <rect x="40" y="270" width="200" height="100" rx="4" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.4"/>
-          <rect x="290" y="180" width="90" height="70" rx="3" fill="none" stroke="#C8B89A" stroke-width="0.5" opacity="0.3"/>
-        </svg>
+    <div class="carousel-container">
+      <div class="carousel-left">
+        <div class="carousel-slides">
+          <div class="carousel-slide active">
+            <img src="images/portada 1.jpg" alt="Portada 1">
+          </div>
+          <div class="carousel-slide">
+            <img src="images/portada 2.jpg" alt="Portada 2">
+          </div>
+          <div class="carousel-slide">
+            <img src="images/portada 3.jpg" alt="Portada 3">
+          </div>
+        </div>
+        <div class="carousel-dots">
+          <span class="carousel-dot active" data-slide="0"></span>
+          <span class="carousel-dot" data-slide="1"></span>
+          <span class="carousel-dot" data-slide="2"></span>
+        </div>
       </div>
-      <div class="hero-bg-r">
-        <div class="hero-bg-rt"></div>
-        <div class="hero-bg-rb"></div>
+      <div class="carousel-right">
+        <div style="background: var(--carbon3);"></div>
+        <div style="background: var(--carbon2);"></div>
       </div>
     </div>
     <div class="hero-overlay"></div>
@@ -966,11 +1041,10 @@
 
     <div class="hero-content">
       <h1 class="hero-title">
-        Porque al final, no construimos<br>
-        cocinas ni quinchos. <em>Creamos</em><br>
-        el lugar donde la vida sucede.
+        <em>Creamos</em> el lugar<br>
+        donde la vida sucede.
       </h1>
-      <p class="hero-sub">Cada proyecto es único, porque cada historia también lo es. Por eso, diseñamos y construimos espacios que combinan elegancia, funcionalidad y calidad, cuidando cada detalle para que reflejen tu estilo y acompañen los momentos más importantes de tu vida.</p>
+      <p class="hero-sub">Diseñamos y construimos espacios únicos que combinan elegancia y funcionalidad.<br>Cada detalle refleja tu estilo para acompañar los momentos más importantes de tu vida.</p>
       <div class="hero-btns">
         <a href="https://wa.me/56994975216?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto" class="btn-primary" target="_blank" rel="noopener">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.118 1.524 5.847L.057 23.998l6.304-1.452A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.939 0-3.762-.516-5.337-1.419l-.382-.228-3.962.911.959-3.853-.25-.396A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
@@ -988,9 +1062,15 @@
   <div class="trust-bar" role="list" aria-label="Por qué elegirnos">
     <div class="trust-item" role="listitem">
       <div class="trust-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
-      <div class="trust-text">Un solo equipo, sin subcontratos</div>
+      <div class="trust-text">Primera reunión sin costo</div>
+    </div>
+    <div class="trust-item" role="listitem">
+      <div class="trust-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </div>
+      <div class="trust-text">Aseguramos el mejor diseño acorde a tu presupuesto</div>
     </div>
     <div class="trust-item" role="listitem">
       <div class="trust-icon" aria-hidden="true">
@@ -1000,15 +1080,9 @@
     </div>
     <div class="trust-item" role="listitem">
       <div class="trust-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
       </div>
-      <div class="trust-text">Proyectos en Santiago</div>
-    </div>
-    <div class="trust-item" role="listitem">
-      <div class="trust-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      </div>
-      <div class="trust-text">Garantía en materiales e instalación</div>
+      <div class="trust-text">Un solo equipo todo coordinado</div>
     </div>
   </div>
 
@@ -1430,6 +1504,35 @@
       });
       card.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+
+    /* ── Carousel animation ── */
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    const totalSlides = slides.length;
+
+    function showSlide(n) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      slides[n].classList.add('active');
+      dots[n].classList.add('active');
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      showSlide(currentSlide);
+    }
+
+    // Change slide every 5 seconds
+    setInterval(nextSlide, 5000);
+
+    // Dot click navigation
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        currentSlide = index;
+        showSlide(currentSlide);
       });
     });
 
