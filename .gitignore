@@ -1,1 +1,7 @@
 .vercel
+clave supabase.txt
+
+# Carpetas de fotos originales de cada proyecto (fuente para scripts/sync-proyectos.js).
+# El sitio publicado usa las copias curadas en images/proyectos/, generadas a partir de estas.
+/Proyecto - */
+/Fotos antes y después/
