@@ -27,7 +27,10 @@
     .login-input:focus { border-color: var(--copper); }
     .login-btn { width: 100%; background: var(--copper); color: #fff; border: none; border-radius: var(--radius); padding: 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
     .login-btn:hover { background: var(--copper2); }
-    .login-err { font-size: 12px; color: #f87171; text-align: center; margin-top: 10px; min-height: 18px; }
+    .login-msg { font-size: 12px; color: #f87171; text-align: center; margin-top: 10px; min-height: 18px; }
+    .login-msg.ok { color: #6ee7a8; }
+    .login-forgot { font-size: 12px; color: var(--sand); text-align: center; margin-top: 8px; cursor: pointer; }
+    .login-forgot:hover { color: var(--copper); text-decoration: underline; }
 
     /* APP LAYOUT */
     .app { display: none; flex: 1; overflow: hidden; height: 100vh; }
@@ -152,7 +155,22 @@
     <label class="login-label">Contraseña</label>
     <input class="login-input" type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" id="loginBtn" onclick="doLogin()">Ingresar</button>
-    <div class="login-err" id="loginErr"></div>
+    <div class="login-msg" id="loginErr"></div>
+    <div class="login-forgot" onclick="doForgot()">¿Olvidaste tu contraseña?</div>
+  </div>
+</div>
+
+<!-- NUEVA CONTRASEÑA (tras clic en el correo de recuperación) -->
+<div class="login-page" id="resetPage" style="display:none;">
+  <div class="login-card">
+    <div class="login-logo">Quinchos<span>&</span>Cocinas</div>
+    <div class="login-sub">Define tu nueva contraseña</div>
+    <label class="login-label">Nueva contraseña</label>
+    <input class="login-input" type="password" id="resetPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doReset()">
+    <label class="login-label">Repetir contraseña</label>
+    <input class="login-input" type="password" id="resetPass2" placeholder="••••••••" onkeydown="if(event.key==='Enter')doReset()">
+    <button class="login-btn" id="resetBtn" onclick="doReset()">Guardar contraseña</button>
+    <div class="login-msg" id="resetMsg"></div>
   </div>
 </div>
 
@@ -271,10 +289,17 @@
   let currentCotizacion = null;
 
   // ── AUTH ─────────────────────────────────────────────────────
+  let recovering = false;
+
   async function init() {
+    // Detecta si el usuario llegó desde el enlace de recuperación del correo
+    db.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') { recovering = true; showReset(); return; }
+      if (recovering) return;                 // no saltar al app mientras cambia la clave
+      if (session) showApp(); else showLogin();
+    });
     const { data: { session } } = await db.auth.getSession();
-    if (session) showApp();
-    db.auth.onAuthStateChange((_, session) => { if (session) showApp(); else showLogin(); });
+    if (session && !recovering) showApp();
   }
 
   async function doLogin() {
@@ -282,7 +307,7 @@
     const pass  = document.getElementById('loginPass').value;
     const errEl = document.getElementById('loginErr');
     const btn   = document.getElementById('loginBtn');
-    errEl.textContent = '';
+    errEl.textContent = ''; errEl.classList.remove('ok');
     btn.innerHTML = '<span class="spinner"></span>';
     btn.disabled = true;
     const { error } = await db.auth.signInWithPassword({ email, password: pass });
@@ -293,13 +318,55 @@
     }
   }
 
+  async function doForgot() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const errEl = document.getElementById('loginErr');
+    errEl.classList.remove('ok');
+    if (!email) { errEl.textContent = 'Escribe tu email arriba y vuelve a pulsar.'; return; }
+    errEl.textContent = 'Enviando...';
+    const { error } = await db.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname
+    });
+    if (error) {
+      errEl.textContent = 'No se pudo enviar el correo. Inténtalo de nuevo.';
+    } else {
+      errEl.classList.add('ok');
+      errEl.textContent = 'Te enviamos un enlace a ' + email + ' para restablecer tu clave.';
+    }
+  }
+
+  async function doReset() {
+    const p1 = document.getElementById('resetPass').value;
+    const p2 = document.getElementById('resetPass2').value;
+    const msg = document.getElementById('resetMsg');
+    const btn = document.getElementById('resetBtn');
+    msg.classList.remove('ok');
+    if (p1.length < 6)  { msg.textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
+    if (p1 !== p2)      { msg.textContent = 'Las contraseñas no coinciden.'; return; }
+    msg.textContent = '';
+    btn.innerHTML = '<span class="spinner"></span>';
+    btn.disabled = true;
+    const { error } = await db.auth.updateUser({ password: p1 });
+    if (error) {
+      msg.textContent = 'No se pudo actualizar. El enlace pudo expirar; solicita otro.';
+      btn.innerHTML = 'Guardar contraseña';
+      btn.disabled = false;
+      return;
+    }
+    recovering = false;
+    msg.classList.add('ok');
+    msg.textContent = '¡Contraseña actualizada!';
+    setTimeout(showApp, 900);
+  }
+
   async function doLogout() {
     await db.auth.signOut();
     showLogin();
   }
 
-  function showApp()  { document.getElementById('loginPage').style.display = 'none'; document.getElementById('appPage').classList.add('show'); loadCotizaciones(); loadPrecios(); }
-  function showLogin(){ document.getElementById('loginPage').style.display = 'flex'; document.getElementById('appPage').classList.remove('show'); }
+  function showApp()  { document.getElementById('loginPage').style.display = 'none'; document.getElementById('resetPage').style.display = 'none'; document.getElementById('appPage').classList.add('show'); loadCotizaciones(); loadPrecios(); }
+  function showLogin(){ document.getElementById('loginPage').style.display = 'flex'; document.getElementById('resetPage').style.display = 'none'; document.getElementById('appPage').classList.remove('show'); }
+  function showReset(){ document.getElementById('loginPage').style.display = 'none'; document.getElementById('resetPage').style.display = 'flex'; document.getElementById('appPage').classList.remove('show'); }
 
   // ── TABS ─────────────────────────────────────────────────────
   function showTab(name, el) {
