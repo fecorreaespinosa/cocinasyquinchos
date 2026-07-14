@@ -130,6 +130,17 @@
   <div class="spinner"></div>
 </div>
 
+<!-- AVISO DE MANTENCIÓN (se muestra cuando COTIZADOR_ACTIVO = false) -->
+<div id="mantencion" style="display:none; max-width:640px; margin:80px auto; padding:0 24px; text-align:center;">
+  <div class="card" style="padding:48px 32px;">
+    <div style="font-size:48px; margin-bottom:16px;">🛠️</div>
+    <h1 class="card-title" style="font-size:24px;">Cotizador en actualización</h1>
+    <p class="card-sub" style="margin-bottom:28px;">Estamos afinando nuestros precios para entregarte una cotización más precisa. Vuelve pronto o escríbenos y te cotizamos directamente.</p>
+    <a href="https://wa.me/56994975216?text=Hola%2C%20me%20interesa%20cotizar%20un%20proyecto" class="btn-primary" target="_blank" rel="noopener" style="text-decoration:none;">Cotizar por WhatsApp</a>
+    <div style="margin-top:16px;"><a href="/" style="color:var(--gray2); font-size:13px;">Volver al inicio</a></div>
+  </div>
+</div>
+
 <div class="page">
   <!-- FORM COLUMN -->
   <div>
@@ -247,11 +258,19 @@
   const { createClient } = window.supabase;
   const db = createClient(SUPA_URL, SUPA_KEY);
 
+  // ⚠️ Interruptor del cotizador. Poner en true para reactivarlo (y descomentar el botón en el nav de las páginas).
+  const COTIZADOR_ACTIVO = false;
+
   let catalogo = { categorias: [], subcategorias: [], items: [] };
   let cantidades = {};   // itemId -> cantidad
   let currentStep = 1;
 
   async function init() {
+    if (!COTIZADOR_ACTIVO) {
+      document.querySelector('.page').style.display = 'none';
+      document.getElementById('mantencion').style.display = 'block';
+      return;
+    }
     try {
       const [c, s, i] = await Promise.all([
         db.from('cotizador_categorias').select('*').eq('activo', true).order('orden'),
