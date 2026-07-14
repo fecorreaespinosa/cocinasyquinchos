@@ -246,32 +246,44 @@
 
     // BUILD LINE ITEMS
     const lines = [];
-    if (['quincho','ambos'].includes(c.tipo)) {
-      const m2 = c.quincho_m2 || 0;
-      lines.push({ cat:'quincho', name:`Superficie: ${m2} m²`, detail: `${m2} m² × ${formatCLP(getP('quincho_base_m2'))}`, price: getP('quincho_base_m2') * m2 });
-      if (c.quincho_techo && c.quincho_techo !== 'ninguno') {
-        const p = getP(`quincho_techo_${c.quincho_techo}`);
-        lines.push({ cat:'quincho', name: c.quincho_techo==='madera'?'Techo madera nativa':'Techo zinc', detail:`${m2} m² × ${formatCLP(p)}`, price: p * m2 });
-      }
-      const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : [];
-      qOps.forEach(key => {
-        const pr = precs.find(p => p.item_key === key);
-        if (pr) lines.push({ cat:'quincho', name: pr.label, detail:'', price: pr.precio });
+    if (Array.isArray(c.detalle) && c.detalle.length) {
+      // Cotización armada desde el catálogo dinámico
+      c.detalle.forEach(d => {
+        const cantidad = Number(d.cantidad) || 0;
+        const precio   = Number(d.precio) || 0;
+        const subtotal = d.subtotal != null ? Number(d.subtotal) : precio * cantidad;
+        const detail   = cantidad !== 1 ? `${cantidad} ${d.unidad || ''} × ${formatCLP(precio)}`.trim() : (d.unidad || '');
+        lines.push({ cat: d.categoria || 'Proyecto', name: d.nombre, detail, price: subtotal });
       });
-    }
-    if (['cocina','ambos'].includes(c.tipo)) {
-      const ml = c.cocina_ml || 0;
-      lines.push({ cat:'cocina', name:`Muebles: ${ml} ml`, detail:`${ml} ml × ${formatCLP(getP('cocina_base_ml'))}`, price: getP('cocina_base_ml') * ml });
-      if (c.cocina_meson && c.cocina_meson !== 'ninguno') {
-        const p = getP(`cocina_meson_${c.cocina_meson}`);
-        const mn = {cuarzo:'Mesón cuarzo',granito:'Mesón granito',acero:'Mesón acero inox'}[c.cocina_meson];
-        lines.push({ cat:'cocina', name: mn, detail:`${ml} ml × ${formatCLP(p)}`, price: p * ml });
+    } else {
+      // Cotizaciones antiguas (configurador fijo)
+      if (['quincho','ambos'].includes(c.tipo)) {
+        const m2 = c.quincho_m2 || 0;
+        lines.push({ cat:'quincho', name:`Superficie: ${m2} m²`, detail: `${m2} m² × ${formatCLP(getP('quincho_base_m2'))}`, price: getP('quincho_base_m2') * m2 });
+        if (c.quincho_techo && c.quincho_techo !== 'ninguno') {
+          const p = getP(`quincho_techo_${c.quincho_techo}`);
+          lines.push({ cat:'quincho', name: c.quincho_techo==='madera'?'Techo madera nativa':'Techo zinc', detail:`${m2} m² × ${formatCLP(p)}`, price: p * m2 });
+        }
+        const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : [];
+        qOps.forEach(key => {
+          const pr = precs.find(p => p.item_key === key);
+          if (pr) lines.push({ cat:'quincho', name: pr.label, detail:'', price: pr.precio });
+        });
       }
-      const cOps = Array.isArray(c.cocina_opciones) ? c.cocina_opciones : [];
-      cOps.forEach(key => {
-        const pr = precs.find(p => p.item_key === key);
-        if (pr) lines.push({ cat:'cocina', name: pr.label, detail:'', price: pr.precio });
-      });
+      if (['cocina','ambos'].includes(c.tipo)) {
+        const ml = c.cocina_ml || 0;
+        lines.push({ cat:'cocina', name:`Muebles: ${ml} ml`, detail:`${ml} ml × ${formatCLP(getP('cocina_base_ml'))}`, price: getP('cocina_base_ml') * ml });
+        if (c.cocina_meson && c.cocina_meson !== 'ninguno') {
+          const p = getP(`cocina_meson_${c.cocina_meson}`);
+          const mn = {cuarzo:'Mesón cuarzo',granito:'Mesón granito',acero:'Mesón acero inox'}[c.cocina_meson];
+          lines.push({ cat:'cocina', name: mn, detail:`${ml} ml × ${formatCLP(p)}`, price: p * ml });
+        }
+        const cOps = Array.isArray(c.cocina_opciones) ? c.cocina_opciones : [];
+        cOps.forEach(key => {
+          const pr = precs.find(p => p.item_key === key);
+          if (pr) lines.push({ cat:'cocina', name: pr.label, detail:'', price: pr.precio });
+        });
+      }
     }
 
     const estimado = lines.reduce((s, l) => s + l.price, 0);
@@ -299,7 +311,7 @@
     let tableHtml = '';
     const cats = [...new Set(lines.map(l => l.cat))];
     cats.forEach(cat => {
-      const catLabel = cat === 'quincho' ? '🏠 Quincho' : '🍳 Cocina';
+      const catLabel = cat === 'quincho' ? '🏠 Quincho' : cat === 'cocina' ? '🍳 Cocina' : cat;
       tableHtml += `<tr class="items-cat"><td colspan="2">${catLabel}</td></tr>`;
       lines.filter(l => l.cat === cat).forEach(l => {
         tableHtml += `<tr class="item-row">

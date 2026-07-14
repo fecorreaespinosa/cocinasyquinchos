@@ -497,6 +497,15 @@
         ${c.mensaje ? detailRow('Mensaje', c.mensaje) : ''}
       </div>
 
+      ${Array.isArray(c.detalle) && c.detalle.length ? `
+      <div class="detail-section">
+        <h4>Detalle cotizado</h4>
+        ${c.detalle.map(d => detailRow(
+          `${d.nombre}${Number(d.cantidad) !== 1 ? ` <span style="opacity:.55">× ${d.cantidad}</span>` : ''}`,
+          formatCLP(d.subtotal ?? (Number(d.precio) * Number(d.cantidad)))
+        )).join('')}
+      </div>` : ''}
+
       <div class="detail-section">
         <h4>Proyecto</h4>
         ${detailRow('Tipo', labelTipo(c.tipo))}
@@ -811,19 +820,26 @@
     const tipoProy = labelTipo(c.tipo);
 
     let resumenItems = '';
-    if (['quincho','ambos'].includes(c.tipo) && c.quincho_m2) {
-      resumenItems += `• Quincho: ${c.quincho_m2} m²`;
-      if (c.quincho_techo && c.quincho_techo !== 'ninguno') resumenItems += ` (techo ${c.quincho_techo})`;
-      const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : [];
-      if (qOps.length) resumenItems += ` + ${qOps.map(k=>k.replace('quincho_','')).join(', ')}`;
-      resumenItems += '\n';
-    }
-    if (['cocina','ambos'].includes(c.tipo) && c.cocina_ml) {
-      resumenItems += `• Cocina: ${c.cocina_ml} ml`;
-      if (c.cocina_meson && c.cocina_meson !== 'ninguno') resumenItems += ` (mesón ${c.cocina_meson})`;
-      const cOps = Array.isArray(c.cocina_opciones) ? c.cocina_opciones : [];
-      if (cOps.length) resumenItems += ` + ${cOps.map(k=>k.replace('cocina_','')).join(', ')}`;
-      resumenItems += '\n';
+    if (Array.isArray(c.detalle) && c.detalle.length) {
+      resumenItems = c.detalle.map(d => {
+        const sub = d.subtotal ?? (Number(d.precio) * Number(d.cantidad));
+        return `• ${d.nombre}${Number(d.cantidad) !== 1 ? ` x${d.cantidad}` : ''}${d.unidad ? ` (${d.unidad})` : ''} — ${formatCLP(sub)}`;
+      }).join('\n') + '\n';
+    } else {
+      if (['quincho','ambos'].includes(c.tipo) && c.quincho_m2) {
+        resumenItems += `• Quincho: ${c.quincho_m2} m²`;
+        if (c.quincho_techo && c.quincho_techo !== 'ninguno') resumenItems += ` (techo ${c.quincho_techo})`;
+        const qOps = Array.isArray(c.quincho_opciones) ? c.quincho_opciones : [];
+        if (qOps.length) resumenItems += ` + ${qOps.map(k=>k.replace('quincho_','')).join(', ')}`;
+        resumenItems += '\n';
+      }
+      if (['cocina','ambos'].includes(c.tipo) && c.cocina_ml) {
+        resumenItems += `• Cocina: ${c.cocina_ml} ml`;
+        if (c.cocina_meson && c.cocina_meson !== 'ninguno') resumenItems += ` (mesón ${c.cocina_meson})`;
+        const cOps = Array.isArray(c.cocina_opciones) ? c.cocina_opciones : [];
+        if (cOps.length) resumenItems += ` + ${cOps.map(k=>k.replace('cocina_','')).join(', ')}`;
+        resumenItems += '\n';
+      }
     }
 
     const validez = new Date();
