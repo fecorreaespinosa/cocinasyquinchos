@@ -136,6 +136,38 @@
     .btn-save-precio:hover { background: var(--copper2); }
     .btn-save-precio.saved { background: #22c55e; }
 
+    /* CATÁLOGO TAB */
+    .catalogo-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .catalogo-hint { font-size: 12px; color: var(--gray2); }
+    .cat-block { background: #fff; border: 0.5px solid rgba(28,26,23,0.12); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+    .cat-head { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: #faf9f7; border-bottom: 1px solid rgba(28,26,23,0.06); }
+    .cat-name { flex: 1; min-width: 0; font-family: 'Playfair Display', serif; font-size: 16px; color: var(--carbon); border: 1px solid transparent; background: transparent; border-radius: 4px; padding: 6px 8px; outline: none; }
+    .cat-name:hover { border-color: rgba(28,26,23,0.12); }
+    .cat-name:focus { border-color: var(--copper); background: #fff; }
+    .sub-list { padding: 12px 14px 14px; }
+    .sub-block { border: 0.5px solid rgba(28,26,23,0.1); border-radius: 6px; margin-bottom: 10px; }
+    .sub-block:last-child { margin-bottom: 0; }
+    .sub-head { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #fcfbfa; border-bottom: 1px solid rgba(28,26,23,0.06); }
+    .sub-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 600; color: var(--carbon); border: 1px solid transparent; background: transparent; border-radius: 4px; padding: 5px 8px; outline: none; }
+    .sub-name:hover { border-color: rgba(28,26,23,0.12); }
+    .sub-name:focus { border-color: var(--copper); background: #fff; }
+    .item-list { padding: 8px 10px 10px; }
+    .item-row { display: grid; grid-template-columns: 1fr 130px 110px auto; gap: 8px; align-items: center; padding: 4px 0; }
+    .item-row-head { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray); padding-bottom: 4px; }
+    .item-row-head span { padding: 0 2px; }
+    .item-input { border: 1px solid rgba(28,26,23,0.15); border-radius: 4px; padding: 6px 9px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--carbon); outline: none; width: 100%; }
+    .item-input:focus { border-color: var(--copper); }
+    .item-input.num { text-align: right; }
+    .row-actions { display: flex; gap: 4px; }
+    .cat-btn { background: #fff; border: 1px solid rgba(28,26,23,0.15); color: var(--carbon2); border-radius: 4px; padding: 6px 10px; font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+    .cat-btn:hover { border-color: var(--copper); color: var(--copper); }
+    .cat-btn.danger:hover { border-color: #dc2626; color: #dc2626; }
+    .cat-btn.mini { padding: 5px 7px; font-size: 11px; line-height: 1; }
+    .cat-empty, .sub-empty { color: var(--gray); font-style: italic; font-size: 13px; padding: 14px; text-align: center; }
+    .sub-empty { padding: 8px; }
+    .catalogo-error { background: #fef2f2; border: 1px solid #fca5a5; border-radius: var(--radius); padding: 16px; font-size: 13px; color: #b91c1c; line-height: 1.6; }
+    .catalogo-error code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
     .toast { position: fixed; bottom: 24px; right: 24px; background: var(--carbon); color: var(--cream); padding: 12px 20px; border-radius: var(--radius); font-size: 13px; z-index: 999; opacity: 0; transform: translateY(8px); transition: all 0.2s; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateY(0); }
 
@@ -187,6 +219,10 @@
       <div class="nav-item" onclick="showTab('precios', this)">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
         Precios
+      </div>
+      <div class="nav-item" onclick="showTab('catalogo', this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Catálogo
       </div>
     </nav>
     <div class="sidebar-footer">
@@ -256,6 +292,24 @@
           <h3>🍳 Cocinas</h3>
           <div id="preciosCocina"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- CATÁLOGO TAB -->
+    <div class="tab-panel" id="tabCatalogo">
+      <div class="topbar">
+        <div class="topbar-title">Catálogo del cotizador</div>
+        <button class="btn-sm btn-ghost-sm" style="width:auto" onclick="loadCatalogo()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          Actualizar
+        </button>
+      </div>
+      <div class="content">
+        <div class="catalogo-toolbar">
+          <span class="catalogo-hint">Define qué se puede cotizar: categorías, subcategorías e items. Los cambios se guardan solos al salir de cada campo.</span>
+          <button class="cat-btn" onclick="addCategoria()">+ Categoría</button>
+        </div>
+        <div id="catalogoTree"><div class="cat-empty">Cargando…</div></div>
       </div>
     </div>
   </main>
@@ -374,6 +428,7 @@
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(`tab${name.charAt(0).toUpperCase()+name.slice(1)}`).classList.add('active');
     el.classList.add('active');
+    if (name === 'catalogo') loadCatalogo();
   }
 
   // ── COTIZACIONES ─────────────────────────────────────────────
@@ -561,6 +616,173 @@
       showToast('Precio actualizado ✓');
     }
   }
+
+  // ── CATÁLOGO ─────────────────────────────────────────────────
+  let catalogo = { categorias: [], subcategorias: [], items: [] };
+
+  async function loadCatalogo() {
+    const cont = document.getElementById('catalogoTree');
+    const [catRes, subRes, itemRes] = await Promise.all([
+      db.from('cotizador_categorias').select('*').order('orden'),
+      db.from('cotizador_subcategorias').select('*').order('orden'),
+      db.from('cotizador_items').select('*').order('orden'),
+    ]);
+    if (catRes.error) {
+      cont.innerHTML = `<div class="catalogo-error">
+        No se pudo cargar el catálogo. Probablemente faltan las tablas en Supabase.<br>
+        Ejecuta una vez el script <code>sql/cotizador-catalogo.sql</code> en el SQL Editor de Supabase y vuelve a pulsar «Actualizar».<br>
+        <small>Detalle: ${catRes.error.message}</small>
+      </div>`;
+      return;
+    }
+    catalogo.categorias    = catRes.data  || [];
+    catalogo.subcategorias = subRes.data  || [];
+    catalogo.items         = itemRes.data || [];
+    renderCatalogo();
+  }
+
+  function renderCatalogo() {
+    const cont = document.getElementById('catalogoTree');
+    if (!catalogo.categorias.length) {
+      cont.innerHTML = `<div class="cat-empty">Aún no hay categorías. Pulsa «+ Categoría» para crear la primera.</div>`;
+      return;
+    }
+    cont.innerHTML = catalogo.categorias.map(cat => {
+      const subs = catalogo.subcategorias.filter(s => s.categoria_id === cat.id);
+      return `
+        <div class="cat-block">
+          <div class="cat-head">
+            <button class="cat-btn mini" title="Subir"  onclick="reorderCategoria(${cat.id},-1)">▲</button>
+            <button class="cat-btn mini" title="Bajar"  onclick="reorderCategoria(${cat.id},1)">▼</button>
+            <input class="cat-name" value="${escAttr(cat.nombre)}" onchange="renameCategoria(${cat.id}, this.value)">
+            <button class="cat-btn" onclick="addSubcategoria(${cat.id})">+ Subcategoría</button>
+            <button class="cat-btn danger mini" title="Eliminar categoría" onclick="deleteCategoria(${cat.id})">🗑</button>
+          </div>
+          <div class="sub-list">
+            ${subs.map(renderSub).join('') || '<div class="sub-empty">Sin subcategorías. Pulsa «+ Subcategoría».</div>'}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderSub(sub) {
+    const items = catalogo.items.filter(i => i.subcategoria_id === sub.id);
+    return `
+      <div class="sub-block">
+        <div class="sub-head">
+          <button class="cat-btn mini" title="Subir" onclick="reorderSub(${sub.id},${sub.categoria_id},-1)">▲</button>
+          <button class="cat-btn mini" title="Bajar" onclick="reorderSub(${sub.id},${sub.categoria_id},1)">▼</button>
+          <input class="sub-name" value="${escAttr(sub.nombre)}" onchange="renameSubcategoria(${sub.id}, this.value)">
+          <button class="cat-btn" onclick="addItem(${sub.id})">+ Item</button>
+          <button class="cat-btn danger mini" title="Eliminar subcategoría" onclick="deleteSubcategoria(${sub.id})">🗑</button>
+        </div>
+        <div class="item-list">
+          ${items.length ? `<div class="item-row item-row-head"><span>Item</span><span>Precio (CLP)</span><span>Unidad</span><span></span></div>` : ''}
+          ${items.map(renderItem).join('') || '<div class="sub-empty">Sin items. Pulsa «+ Item».</div>'}
+        </div>
+      </div>`;
+  }
+
+  function renderItem(it) {
+    return `
+      <div class="item-row">
+        <input class="item-input" value="${escAttr(it.nombre)}" onchange="updateItem(${it.id},'nombre',this.value)">
+        <input class="item-input num" type="number" min="0" value="${it.precio}" onchange="updateItem(${it.id},'precio',this.value)">
+        <input class="item-input" value="${escAttr(it.unidad||'')}" placeholder="unidad" onchange="updateItem(${it.id},'unidad',this.value)">
+        <div class="row-actions">
+          <button class="cat-btn mini" title="Subir" onclick="reorderItem(${it.id},${it.subcategoria_id},-1)">▲</button>
+          <button class="cat-btn mini" title="Bajar" onclick="reorderItem(${it.id},${it.subcategoria_id},1)">▼</button>
+          <button class="cat-btn danger mini" title="Eliminar item" onclick="deleteItem(${it.id})">🗑</button>
+        </div>
+      </div>`;
+  }
+
+  // — Categorías —
+  async function addCategoria() {
+    const orden = catalogo.categorias.length + 1;
+    const { error } = await db.from('cotizador_categorias').insert([{ nombre: 'Nueva categoría', orden }]);
+    if (error) return showToast('Error: ' + error.message);
+    showToast('Categoría creada ✓');
+    loadCatalogo();
+  }
+  async function renameCategoria(id, nombre) {
+    const { error } = await db.from('cotizador_categorias').update({ nombre: nombre.trim() || 'Sin nombre' }).eq('id', id);
+    showToast(error ? 'Error al guardar' : 'Guardado ✓');
+  }
+  async function deleteCategoria(id) {
+    if (!confirm('¿Eliminar esta categoría con todas sus subcategorías e items?')) return;
+    const { error } = await db.from('cotizador_categorias').delete().eq('id', id);
+    if (error) return showToast('Error: ' + error.message);
+    showToast('Categoría eliminada');
+    loadCatalogo();
+  }
+
+  // — Subcategorías —
+  async function addSubcategoria(categoria_id) {
+    const orden = catalogo.subcategorias.filter(s => s.categoria_id === categoria_id).length + 1;
+    const { error } = await db.from('cotizador_subcategorias').insert([{ categoria_id, nombre: 'Nueva subcategoría', orden }]);
+    if (error) return showToast('Error: ' + error.message);
+    loadCatalogo();
+  }
+  async function renameSubcategoria(id, nombre) {
+    const { error } = await db.from('cotizador_subcategorias').update({ nombre: nombre.trim() || 'Sin nombre' }).eq('id', id);
+    showToast(error ? 'Error al guardar' : 'Guardado ✓');
+  }
+  async function deleteSubcategoria(id) {
+    if (!confirm('¿Eliminar esta subcategoría y sus items?')) return;
+    const { error } = await db.from('cotizador_subcategorias').delete().eq('id', id);
+    if (error) return showToast('Error: ' + error.message);
+    showToast('Subcategoría eliminada');
+    loadCatalogo();
+  }
+
+  // — Items —
+  async function addItem(subcategoria_id) {
+    const orden = catalogo.items.filter(i => i.subcategoria_id === subcategoria_id).length + 1;
+    const { error } = await db.from('cotizador_items').insert([{ subcategoria_id, nombre: 'Nuevo item', precio: 0, unidad: 'unidad', orden }]);
+    if (error) return showToast('Error: ' + error.message);
+    loadCatalogo();
+  }
+  async function updateItem(id, campo, valor) {
+    const patch = {};
+    if (campo === 'precio') { const n = parseFloat(valor); patch.precio = (isNaN(n) || n < 0) ? 0 : n; }
+    else { patch[campo] = valor.trim(); }
+    const { error } = await db.from('cotizador_items').update(patch).eq('id', id);
+    // refleja el estado normalizado en memoria por si se reordena luego
+    const it = catalogo.items.find(x => x.id === id); if (it && !error) Object.assign(it, patch);
+    showToast(error ? 'Error al guardar' : 'Guardado ✓');
+  }
+  async function deleteItem(id) {
+    if (!confirm('¿Eliminar este item?')) return;
+    const { error } = await db.from('cotizador_items').delete().eq('id', id);
+    if (error) return showToast('Error: ' + error.message);
+    showToast('Item eliminado');
+    loadCatalogo();
+  }
+
+  // — Reordenar (intercambia el campo orden entre dos filas vecinas) —
+  async function reorderRows(list, tabla, id, dir) {
+    const sorted = [...list].sort((a, b) => a.orden - b.orden);
+    const idx = sorted.findIndex(x => x.id === id);
+    const swap = idx + dir;
+    if (idx < 0 || swap < 0 || swap >= sorted.length) return;
+    const a = sorted[idx], b = sorted[swap];
+    const [r1, r2] = await Promise.all([
+      db.from(tabla).update({ orden: b.orden }).eq('id', a.id),
+      db.from(tabla).update({ orden: a.orden }).eq('id', b.id),
+    ]);
+    if (r1.error || r2.error) return showToast('Error al reordenar');
+    loadCatalogo();
+  }
+  function reorderCategoria(id, dir) { reorderRows(catalogo.categorias, 'cotizador_categorias', id, dir); }
+  function reorderSub(id, categoria_id, dir) {
+    reorderRows(catalogo.subcategorias.filter(s => s.categoria_id === categoria_id), 'cotizador_subcategorias', id, dir);
+  }
+  function reorderItem(id, subcategoria_id, dir) {
+    reorderRows(catalogo.items.filter(i => i.subcategoria_id === subcategoria_id), 'cotizador_items', id, dir);
+  }
+
+  function escAttr(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
   // ── HELPERS ──────────────────────────────────────────────────
   function detailRow(k, v) { return `<div class="detail-row"><span class="detail-key">${k}</span><span class="detail-val">${v}</span></div>`; }
