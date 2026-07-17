@@ -181,6 +181,18 @@
         </div>
       </a>
 
+      <a class="gal-item" href="proyecto-las-lomas.html">
+        <div class="gal-ph" style="height:100%;">
+          <img src="images/proyectos/las-lomas/1.png" alt="Cocina Las Lomas" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="gal-overlay">
+          <div>
+            <div class="gal-info-label">Las Lomas</div>
+            <div class="gal-info-tag">Cocina</div>
+          </div>
+        </div>
+      </a>
+
       <a class="gal-item" href="proyecto-malmo.html">
         <div class="gal-ph" style="height:100%;">
           <img src="images/proyectos/malmo/1.jpeg" alt="Cocina Malmo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">
@@ -252,7 +264,7 @@
 
     <div class="slider-outer">
       <div>
-        <div class="slider-wrap" id="sliderWrap" role="img" aria-label="Comparación antes y después · Herrajes Sur">
+        <div class="slider-wrap" id="sliderWrap" role="img" aria-label="Comparación antes y después · Cocina Las Lomas">
           <div class="slider-before">
             <svg width="100%" height="340" viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
               <rect width="600" height="340" fill="#2A2620"/>
@@ -284,7 +296,7 @@
           <div class="slider-badge before">Antes</div>
           <div class="slider-badge after">Después</div>
           <div class="slider-footer">
-            <span class="slider-footer-txt" id="sliderFooterTxt">Herrajes Sur</span>
+            <span class="slider-footer-txt" id="sliderFooterTxt">Cocina Las Lomas</span>
             <span class="slider-pct" id="sliderPct">50%</span>
           </div>
         </div>
@@ -292,7 +304,7 @@
 
       <div class="slider-thumbnails" role="list" aria-label="Proyectos antes y después">
         <div class="thumb-card active" role="listitem" tabindex="0" data-index="0">
-          <div class="thumb-title">Herrajes Sur</div>
+          <div class="thumb-title">Cocina Las Lomas</div>
           <div class="thumb-meta">
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -305,7 +317,7 @@
           </div>
         </div>
         <div class="thumb-card" role="listitem" tabindex="0" data-index="1">
-          <div class="thumb-title">Cocina El Habito</div>
+          <div class="thumb-title">Herrajes Sur</div>
           <div class="thumb-meta">
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -318,7 +330,7 @@
           </div>
         </div>
         <div class="thumb-card" role="listitem" tabindex="0" data-index="2">
-          <div class="thumb-title">Ernesto Prado</div>
+          <div class="thumb-title">Cocina El Habito</div>
           <div class="thumb-meta">
             <span>
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -331,6 +343,19 @@
           </div>
         </div>
         <div class="thumb-card" role="listitem" tabindex="0" data-index="3">
+          <div class="thumb-title">Ernesto Prado</div>
+          <div class="thumb-meta">
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Santiago
+            </span>
+            <span>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              —
+            </span>
+          </div>
+        </div>
+        <div class="thumb-card" role="listitem" tabindex="0" data-index="4">
           <div class="thumb-title">Malmo</div>
           <div class="thumb-meta">
             <span>
@@ -541,6 +566,7 @@
 
     /* ── Antes/después: proyectos ── */
     const adProjects = [
+      { desc: 'Cocina Las Lomas', beforeSrc: 'images/antes-despues/las-lomas-antes.jpg',   afterSrc: 'images/antes-despues/las-lomas-despues.jpg' },
       { desc: 'Herrajes Sur',   beforeSrc: 'images/herrajes-sur-antes.jpg',           afterSrc: 'images/herrajes-sur-despues.jpg' },
       { desc: 'Cocina El Habito', beforeSrc: 'images/antes-despues/el-habito-antes.jpg',   afterSrc: 'images/antes-despues/el-habito-despues.jpg' },
       { desc: 'Ernesto Prado',  beforeSrc: 'images/antes-despues/ernesto-prado-antes.jpg', afterSrc: 'images/antes-despues/ernesto-prado-despues.jpg' },
@@ -577,6 +603,9 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
       });
     });
+
+    /* Muestra la primera transformación (Cocina Las Lomas) por defecto, sin necesidad de hacer clic */
+    loadAdProject(0);
 
     /* ── Carousel animation ── */
     const slides = document.querySelectorAll('.carousel-slide');
