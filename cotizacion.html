@@ -342,7 +342,7 @@
     const validUntil = new Date(fecha);
     validUntil.setDate(validUntil.getDate() + 30);
     document.getElementById('validity').innerHTML =
-      `Esta cotización es válida hasta el <strong>${validUntil.toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})}</strong>. Sujeta a confirmación tras visita técnica sin costo.`;
+      `Esta cotización es válida hasta el <strong>${validUntil.toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'})}</strong>. Sujeta a confirmación tras visita técnica.`;
 
     // WA BUTTON
     const waMsg = encodeURIComponent(
