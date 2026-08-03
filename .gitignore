@@ -1,5 +1,6 @@
 .vercel
 clave supabase.txt
+ACCESOS-sitio.txt
 
 # Carpetas de fotos originales de cada proyecto (fuente para scripts/sync-proyectos.js).
 # El sitio publicado usa las copias curadas en images/proyectos/, generadas a partir de estas.
